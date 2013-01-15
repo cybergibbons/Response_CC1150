@@ -381,27 +381,27 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  .debug_pubnames
                 0x00000000       0xd5 CC1150_Response.o
 
-.debug_info     0x00000000      0x795
+.debug_info     0x00000000      0x77a
  *(.debug_info)
- .debug_info    0x00000000      0x795 CC1150_Response.o
+ .debug_info    0x00000000      0x77a CC1150_Response.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x24a
+.debug_abbrev   0x00000000      0x1f5
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x24a CC1150_Response.o
+ .debug_abbrev  0x00000000      0x1f5 CC1150_Response.o
 
-.debug_line     0x00000000      0x514
+.debug_line     0x00000000      0x4fb
  *(.debug_line)
- .debug_line    0x00000000      0x514 CC1150_Response.o
+ .debug_line    0x00000000      0x4fb CC1150_Response.o
 
 .debug_frame    0x00000000       0xc0
  *(.debug_frame)
  .debug_frame   0x00000000       0xc0 CC1150_Response.o
 
-.debug_str      0x00000000      0x253
+.debug_str      0x00000000      0x25e
  *(.debug_str)
- .debug_str     0x00000000      0x253 CC1150_Response.o
-                                0x296 (size before relaxing)
+ .debug_str     0x00000000      0x25e CC1150_Response.o
+                                0x2a1 (size before relaxing)
 
 .debug_loc      0x00000000      0x110
  *(.debug_loc)
