@@ -96,7 +96,13 @@ void send_command(uint8_t command) {
 	select();
 	send_spi(command);
 	deselect();
-	_delay_us(SPI_DELAY););
+}
+
+void send_command_sres() {
+	select();
+	send_spi(CC1150_SRES);
+	while(PINB & (1 << SPI_MISO_PIN));
+	deselect();
 }
 
 void set_register(uint8_t address, uint8_t data) {
@@ -104,7 +110,6 @@ void set_register(uint8_t address, uint8_t data) {
 	send_spi(address);
 	send_spi(data);
 	deselect();
-	_delay_us(SPI_DELAY);
 }
 
 void set_register_burst(uint8_t address, uint8_t *data, uint8_t length) {
@@ -112,45 +117,42 @@ void set_register_burst(uint8_t address, uint8_t *data, uint8_t length) {
 	
 	select();
 	send_spi(address);
-	_delay_us(SPI_DELAY);
 	
 	for (i = 0; i < length; i++) {
 		send_spi(data[i]);
-		_delay_us(SPI_DELAY);
 	}
 	
 	deselect();
-	_delay_us(SPI_DELAY);
 }
 void write_settings(REGSETTINGS *pRegSettings) {
 	set_register(CC1150_IOCFG1, 	pRegSettings->IOCFG1);
 	set_register(CC1150_IOCFG0, 	pRegSettings->IOCFG0);
 	set_register(CC1150_FIFOTHR, 	pRegSettings->FIFOTHR);
-	set_register(CC1150_SYNC1, 	pRegSettings->SYNC1);
-	set_register(CC1150_SYNC0, 	pRegSettings->SYNC0);
+	set_register(CC1150_SYNC1, 		pRegSettings->SYNC1);
+	set_register(CC1150_SYNC0, 		pRegSettings->SYNC0);
 	set_register(CC1150_PKTLEN, 	pRegSettings->PKTLEN);
 	set_register(CC1150_PKTCTRL0, 	pRegSettings->PKTCTRL0);
-	set_register(CC1150_ADDR, 	pRegSettings->ADDR);
-	set_register(CC1150_CHANNR,	pRegSettings->CHANNR);
-	set_register(CC1150_FREQ2, 	pRegSettings->FREQ2);
-	set_register(CC1150_FREQ1, 	pRegSettings->FREQ1);
-	set_register(CC1150_FREQ0, 	pRegSettings->FREQ0);
+	set_register(CC1150_ADDR, 		pRegSettings->ADDR);
+	set_register(CC1150_CHANNR,		pRegSettings->CHANNR);
+	set_register(CC1150_FREQ2, 		pRegSettings->FREQ2);
+	set_register(CC1150_FREQ1, 		pRegSettings->FREQ1);
+	set_register(CC1150_FREQ0, 		pRegSettings->FREQ0);
 	set_register(CC1150_MDMCFG4, 	pRegSettings->MDMCFG4);
 	set_register(CC1150_MDMCFG3, 	pRegSettings->MDMCFG3);
 	set_register(CC1150_MDMCFG2, 	pRegSettings->MDMCFG2);
 	set_register(CC1150_MDMCFG1, 	pRegSettings->MDMCFG1);
 	set_register(CC1150_MDMCFG0, 	pRegSettings->MDMCFG0);
 	set_register(CC1150_DEVIATN, 	pRegSettings->DEVIATN);
-	set_register(CC1150_MCSM1, 	pRegSettings->MCSM1);
-	set_register(CC1150_MCSM0, 	pRegSettings->MCSM0);
+	set_register(CC1150_MCSM1, 		pRegSettings->MCSM1);
+	set_register(CC1150_MCSM0, 		pRegSettings->MCSM0);
 	set_register(CC1150_FREND0, 	pRegSettings->FREND0);
 	set_register(CC1150_FSCAL3, 	pRegSettings->FSCAL3);
 	set_register(CC1150_FSCAL2, 	pRegSettings->FSCAL2); 
 	set_register(CC1150_FSCAL1, 	pRegSettings->FSCAL1); 
 	set_register(CC1150_FSCAL0, 	pRegSettings->FSCAL0); 
 	set_register(CC1150_FSTEST, 	pRegSettings->FSTEST); 
-	set_register(CC1150_PTEST, 	pRegSettings->PTEST); 
-	set_register(CC1150_TEST2, 	pRegSettings->TEST2); 
+	set_register(CC1150_PTEST, 		pRegSettings->PTEST); 
+	set_register(CC1150_TEST2, 		pRegSettings->TEST2); 
 }
 
 int main(void) {
@@ -159,14 +161,11 @@ int main(void) {
 	DDRL |= (1<<PORTL0);
 	
 	// 250kHz
-	setup_spi(SPI_MSTR_CLK64);
+	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
-	_delay_us(SPI_DELAY);
-	
+
 	while(1) {
-		send_command(CC1150_SRES);
-		// Arbitrary delay
-		_delay_us(100);
+		send_command_sres();
 		
 		write_settings(&regSettings);
 		set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));

@@ -21,7 +21,7 @@
 #define SPI_MISO_PIN PORTB3
 
 // Arbitary delay in us as CC1150 seems to not respond
-#define SPI_DELAY 10
+#define SPI_DELAY 1
 
 #define SPI_MODE_0 0x00 
 #define SPI_MODE_1 0x01 
