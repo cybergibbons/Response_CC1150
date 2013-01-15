@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 #include <CC1150_Response.h>
 
 // Copied from logic trace of CC1150 from door contact
@@ -70,6 +71,23 @@ void setup_spi(uint8_t clock) {
 	SPSR = (((clock & 0x04) == 4) << SPI2X);
 }
 
+void setup_pcint(void) {
+	// SPI_MISO_PIN receives a synchronous clock
+	// Setup PCINT3 interrupt
+	PCICR |= (1 << PCIE0);
+	PCMSK0 |= (1 << PCINT3);
+	
+	sei();
+}
+
+ISR(PCINT0_vect) {
+	// CC1150 samples on falling edge
+	// So we need to setup on rising edge
+	if (!(PINB & (1 << SPI_MISO_PIN))) {
+		PORTL ^= (1 << PORTL0);
+	}
+}
+
 void enable_spi(void) {
 	SPCR |= (1 << SPE);
 }
@@ -99,6 +117,8 @@ void send_command(uint8_t command) {
 }
 
 void send_command_sres() {
+	// Keeps CC1150 selected and waits for MISO to go low
+	// as per p21 of datasheet
 	select();
 	send_spi(CC1150_SRES);
 	while(PINB & (1 << SPI_MISO_PIN));
@@ -160,9 +180,12 @@ int main(void) {
 	
 	DDRL |= (1<<PORTL0);
 	
-	// 250kHz
+	// Door contact runs very slowly
+	// But CC1150 supports 4MHz
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
+	
+	setup_pcint();
 
 	while(1) {
 		send_command_sres();
@@ -173,14 +196,9 @@ int main(void) {
 		// Why do I need to set these again?
 		set_register(CC1150_IOCFG0,0x0C);
 		set_register(CC1150_IOCFG1,0x0B);
-	
-		// Flip the synchronous input asynchrounously for test
-		while(1) {
-			PORTL |= (1<<PORTL0);
-			_delay_us(160);
-			PORTL &= ~(1<<PORTL0);
-			_delay_us(160);
-		}
+
+		// Currently do nothing 
+		while(1);
 	}
 	
 	
