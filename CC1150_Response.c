@@ -96,7 +96,7 @@ void send_command(uint8_t command) {
 	select();
 	send_spi(command);
 	deselect();
-	_delay_us(_delay_us(SPI_DELAY););
+	_delay_us(SPI_DELAY););
 }
 
 void set_register(uint8_t address, uint8_t data) {
