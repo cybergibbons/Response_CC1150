@@ -48,7 +48,34 @@ uint8_t paTable[] = {
 	0xC3
 };
 
+// This holds the raw signal clocked out
+uint8_t signature[] = {
+	0x71,
+	0x13,
+	0x34,
+	0x49,
+	0x5b,
+	0x26,
+	0x6d,
+	0x5a,
+	0x36,
+	0x49,
+	0x12,
+	0x26,
+	0x49,
+	0x12,
+	0x24, 
+	0x49,
+	0x12,
+	0x24,
+	0x49,
+	0x1a,
+	0x24
+};
 
+const uint8_t sig_length = 21;
+volatile uint8_t byte = 0;
+volatile uint8_t bit = 0;
 	
 void setup_spi(uint8_t clock) {
 	
@@ -84,7 +111,23 @@ ISR(PCINT0_vect) {
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
 	if (!(PINB & (1 << SPI_MISO_PIN))) {
-		PORTL ^= (1 << PORTL0);
+		//PORTL ^= (1 << PORTL0);
+		if (signature[byte] & (1 << bit)) {
+			PORTL |= (1 << PORTL0);
+		} else {
+			PORTL &= ~(1 << PORTL0);
+		}
+		
+		
+		
+		bit++;
+		if (bit == 8) {
+			bit = 0;
+			byte++;
+			if (byte == sig_length) {
+				byte = 0;
+			}
+		}
 	}
 }
 
@@ -182,24 +225,22 @@ int main(void) {
 	
 	// Door contact runs very slowly
 	// But CC1150 supports 4MHz
+	
+	bit = 0;
+	byte = 0;
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
 	
 	setup_pcint();
 
-	while(1) {
-		send_command_sres();
+	send_command_sres();
 		
-		write_settings(&regSettings);
-		set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
-		send_command(CC1150_STX);
-		// Why do I need to set these again?
-		set_register(CC1150_IOCFG0,0x0C);
-		set_register(CC1150_IOCFG1,0x0B);
-
-		// Currently do nothing 
-		while(1);
-	}
+	write_settings(&regSettings);
+	set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
+	send_command(CC1150_STX);
+	
+	// Currently do nothing 
+	while(1);
 	
 	
 	
