@@ -110,23 +110,21 @@ void setup_pcint(void) {
 ISR(PCINT0_vect) {
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
-	if (!(PINB & (1 << SPI_MISO_PIN))) {
-		//PORTL ^= (1 << PORTL0);
-		if (signature[byte] & (1 << bit)) {
+	if ((PINB & (1 << SPI_MISO_PIN))) {
+		if (signature[byte] & (1 << (7 - bit))) {
 			PORTL |= (1 << PORTL0);
 		} else {
 			PORTL &= ~(1 << PORTL0);
 		}
 		
-		
-		
 		bit++;
-		if (bit == 8) {
+		
+		if (bit > 7) {
 			bit = 0;
+			
 			byte++;
-			if (byte == sig_length) {
+			if (byte > sig_length - 1)
 				byte = 0;
-			}
 		}
 	}
 }
@@ -226,7 +224,7 @@ int main(void) {
 	// Door contact runs very slowly
 	// But CC1150 supports 4MHz
 	
-	bit = 0;
+	bit = 7;
 	byte = 0;
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
