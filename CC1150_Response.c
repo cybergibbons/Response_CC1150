@@ -50,32 +50,30 @@ uint8_t paTable[] = {
 
 // This holds the raw signal clocked out
 uint8_t signature[] = {
-	0x71,
-	0x13,
-	0x34,
-	0x49,
-	0x5b,
-	0x26,
-	0x6d,
-	0x5a,
-	0x36,
-	0x49,
-	0x12,
-	0x26,
-	0x49,
-	0x12,
+	0xe2,
+	0x4d,
+	0xa4,
+	0x9b,
+	0x69,
+	0xb6,
+	0xda, 
+	0x6d, 
 	0x24, 
-	0x49,
-	0x12,
-	0x24,
-	0x49,
-	0x1a,
-	0x24
+	0x92, 
+	0x69, 
+	0x24, 
+	0x92, 
+	0x49, 
+	0x24, 
+	0x92, 
+	0x49, 
+	0xa4
 };
 
-const uint8_t sig_length = 21;
+const uint8_t sig_length = 18;
 volatile uint8_t byte = 0;
 volatile uint8_t bit = 0;
+volatile uint8_t clear_to_send = 1;
 	
 void setup_spi(uint8_t clock) {
 	
@@ -110,7 +108,9 @@ void setup_pcint(void) {
 ISR(PCINT0_vect) {
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
-	if ((PINB & (1 << SPI_MISO_PIN))) {
+	if (clear_to_send == 0 && (PINB & (1 << SPI_MISO_PIN))) {
+		PORTL |= (1 << PORTL1);
+		
 		if (signature[byte] & (1 << (7 - bit))) {
 			PORTL |= (1 << PORTL0);
 		} else {
@@ -118,14 +118,18 @@ ISR(PCINT0_vect) {
 		}
 		
 		bit++;
-		
+			
 		if (bit > 7) {
 			bit = 0;
-			
 			byte++;
-			if (byte > sig_length - 1)
+			
+			if (byte > sig_length - 1) {
 				byte = 0;
+				clear_to_send = 1;
+			}
 		}
+		
+		PORTL &= ~(1 << PORTL0);
 	}
 }
 
@@ -220,11 +224,12 @@ int main(void) {
 	CPU_PRESCALE(0);
 	
 	DDRL |= (1<<PORTL0);
+	DDRL |= (1<<PORTL1);
 	
 	// Door contact runs very slowly
 	// But CC1150 supports 4MHz
 	
-	bit = 7;
+	bit = 0;
 	byte = 0;
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
@@ -237,8 +242,15 @@ int main(void) {
 	set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
 	send_command(CC1150_STX);
 	
+	clear_to_send = 0;
 	// Currently do nothing 
-	while(1);
+	while(1) {
+		while(clear_to_send == 0);
+		send_command(CC1150_SFSTXON);
+		_delay_ms(1000);
+		send_command(CC1150_STX);
+		clear_to_send = 0;
+	}
 	
 	
 	
