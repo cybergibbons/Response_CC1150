@@ -2,6 +2,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <CC1150_Response.h>
+#include <RingBuffer.h>
 
 // Copied from logic trace of CC1150 from door contact
 // Currently not stored in PROGMEM as may modify
@@ -71,9 +72,9 @@ uint8_t signature[] = {
 };
 
 const uint8_t sig_length = 18;
-volatile uint8_t byte = 0;
-volatile uint8_t bit = 0;
 volatile uint8_t clear_to_send = 1;
+RingBuffer_t tx_buffer;
+uint8_t tx_buffer_data[32];
 	
 void setup_spi(uint8_t clock) {
 	
@@ -90,10 +91,10 @@ void setup_spi(uint8_t clock) {
 		| (1 << MSTR) // Master of the universe
 		| (0 << CPOL) // default
 		| (0 << CPHA) // default
-		| (((clock & 0x02) == 2) << SPR1) // top clock bit
+		| ((clock & 0x02) << SPR1) // top clock bit
 		| ((clock & 0x01) << SPR0); // bottom clock bit;
 		
-	SPSR = (((clock & 0x04) == 4) << SPI2X);
+	SPSR = (clock & 0x04) << SPI2X;
 }
 
 void setup_pcint(void) {
@@ -106,31 +107,35 @@ void setup_pcint(void) {
 }
 
 ISR(PCINT0_vect) {
+	static uint8_t bit = 0x80;
+	static uint8_t byte = 0;
+	
+	PORTL |= (1 << PORTL1);
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
 	if (clear_to_send == 0 && (PINB & (1 << SPI_MISO_PIN))) {
-		PORTL |= (1 << PORTL1);
 		
-		if (signature[byte] & (1 << (7 - bit))) {
+		if (bit == 0x80 && !RingBuffer_IsEmpty(&tx_buffer)) {
+			byte = RingBuffer_Remove(&tx_buffer);
+		}
+		
+		if (byte & bit) {
 			PORTL |= (1 << PORTL0);
 		} else {
 			PORTL &= ~(1 << PORTL0);
 		}
 		
-		bit++;
-			
-		if (bit > 7) {
-			bit = 0;
-			byte++;
-			
-			if (byte > sig_length - 1) {
-				byte = 0;
-				clear_to_send = 1;
-			}
+		bit >>= 1;
+		
+		if (bit == 0) {
+			bit = 0x80;
 		}
 		
-		PORTL &= ~(1 << PORTL0);
+		if (RingBuffer_IsEmpty(&tx_buffer)) {
+				clear_to_send = 1;
+		}	
 	}
+	PORTL &= ~(1 << PORTL1);
 }
 
 void enable_spi(void) {
@@ -229,27 +234,32 @@ int main(void) {
 	// Door contact runs very slowly
 	// But CC1150 supports 4MHz
 	
-	bit = 0;
-	byte = 0;
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
-	
 	setup_pcint();
+	
+	RingBuffer_InitBuffer(&tx_buffer, tx_buffer_data, sizeof(tx_buffer_data));
 
 	send_command_sres();
 		
 	write_settings(&regSettings);
 	set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
-	send_command(CC1150_STX);
 	
-	clear_to_send = 0;
+	
+	
 	// Currently do nothing 
 	while(1) {
-		while(clear_to_send == 0);
-		send_command(CC1150_SFSTXON);
-		_delay_ms(1000);
+		for (int i = 0; i < sig_length; i++) {
+			RingBuffer_Insert(&tx_buffer, signature[i]);
+		}
+		
 		send_command(CC1150_STX);
 		clear_to_send = 0;
+		
+		while(clear_to_send == 0);
+		
+		send_command(CC1150_SFSTXON);
+		_delay_ms(1000);
 	}
 	
 	
