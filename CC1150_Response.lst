@@ -45,966 +45,897 @@
   53               	.LSM7:
   54 0022 0895      		ret
   55               	.LFE19:
-  57               		.section	.text.setup_pcint,"ax",@progbits
-  58               	.global	setup_pcint
-  60               	setup_pcint:
+  57               		.section	.text.enable_pcint,"ax",@progbits
+  58               	.global	enable_pcint
+  60               	enable_pcint:
   61               	.LFB20:
   62               	.LSM8:
   63               	/* prologue: function */
   64               	/* frame size = 0 */
   65               	.LSM9:
-  66 0000 E8E6      		ldi r30,lo8(104)
-  67 0002 F0E0      		ldi r31,hi8(104)
+  66 0000 EAE0      		ldi r30,lo8(266)
+  67 0002 F1E0      		ldi r31,hi8(266)
   68 0004 8081      		ld r24,Z
   69 0006 8160      		ori r24,lo8(1)
   70 0008 8083      		st Z,r24
   71               	.LSM10:
-  72 000a EBE6      		ldi r30,lo8(107)
-  73 000c F0E0      		ldi r31,hi8(107)
+  72 000a E8E6      		ldi r30,lo8(104)
+  73 000c F0E0      		ldi r31,hi8(104)
   74 000e 8081      		ld r24,Z
-  75 0010 8860      		ori r24,lo8(8)
+  75 0010 8160      		ori r24,lo8(1)
   76 0012 8083      		st Z,r24
   77               	.LSM11:
-  78               	/* #APP */
-  79               	 ;  106 "CC1150_Response.c" 1
-  80 0014 7894      		sei
-  81               	 ;  0 "" 2
-  82               	/* epilogue start */
+  78 0014 EBE6      		ldi r30,lo8(107)
+  79 0016 F0E0      		ldi r31,hi8(107)
+  80 0018 8081      		ld r24,Z
+  81 001a 8860      		ori r24,lo8(8)
+  82 001c 8083      		st Z,r24
   83               	.LSM12:
-  84               	/* #NOAPP */
-  85 0016 0895      		ret
-  86               	.LFE20:
-  88               		.section	.text.__vector_9,"ax",@progbits
-  89               	.global	__vector_9
-  91               	__vector_9:
-  92               	.LFB21:
-  93               	.LSM13:
-  94 0000 1F92      		push __zero_reg__
-  95 0002 0F92      		push r0
-  96 0004 0FB6      		in r0,__SREG__
-  97 0006 0F92      		push r0
-  98 0008 0BB6      		in r0,91-32
-  99 000a 0F92      		push r0
- 100 000c 1124      		clr __zero_reg__
- 101 000e 2F93      		push r18
- 102 0010 3F93      		push r19
- 103 0012 4F93      		push r20
- 104 0014 8F93      		push r24
- 105 0016 9F93      		push r25
- 106 0018 EF93      		push r30
- 107 001a FF93      		push r31
- 108               	/* prologue: Signal */
- 109               	/* frame size = 0 */
- 110               	.LSM14:
- 111 001c 8091 0B01 		lds r24,267
- 112 0020 8260      		ori r24,lo8(2)
- 113 0022 8093 0B01 		sts 267,r24
- 114               	.LSM15:
- 115 0026 8091 0000 		lds r24,clear_to_send
- 116 002a 8823      		tst r24
- 117 002c 01F0      		breq .+2
- 118 002e 00C0      		rjmp .L6
- 119 0030 1B9B      		sbis 35-32,3
- 120 0032 00C0      		rjmp .L6
- 121               	.LSM16:
- 122 0034 3091 0000 		lds r19,bit.1409
- 123 0038 3038      		cpi r19,lo8(-128)
- 124 003a 01F4      		brne .L7
- 125               	.LBB61:
- 126               	.LBB62:
- 127               	.LBB63:
- 128               	.LBB64:
- 129               	.LSM17:
- 130 003c 8FB7      		in r24,__SREG__
- 131               	.LVL5:
- 132               	.LSM18:
- 133               	/* #APP */
- 134               	 ;  35 "./RingBuffer.h" 1
- 135 003e F894      		cli
- 136               	 ;  0 "" 2
- 137               	.LSM19:
- 138               	/* #NOAPP */
- 139 0040 2091 0000 		lds r18,tx_buffer+9
- 140               	.LVL6:
- 141               	.LSM20:
- 142 0044 8FBF      		out __SREG__,r24
- 143               	.LBE64:
- 144               	.LBE63:
- 145               	.LBE62:
- 146               	.LBE61:
- 147               	.LSM21:
- 148 0046 2223      		tst r18
- 149 0048 01F0      		breq .L7
- 150               	.LBB65:
- 151               	.LBB66:
- 152               	.LSM22:
- 153 004a E091 0000 		lds r30,tx_buffer+2
- 154 004e F091 0000 		lds r31,(tx_buffer+2)+1
- 155 0052 4191      		ld r20,Z+
- 156               	.LVL7:
- 157               	.LSM23:
- 158 0054 F093 0000 		sts (tx_buffer+2)+1,r31
- 159 0058 E093 0000 		sts tx_buffer+2,r30
- 160 005c 8091 0000 		lds r24,tx_buffer+6
- 161 0060 9091 0000 		lds r25,(tx_buffer+6)+1
- 162               	.LVL8:
- 163 0064 E817      		cp r30,r24
- 164 0066 F907      		cpc r31,r25
- 165 0068 01F4      		brne .L8
- 166               	.LSM24:
- 167 006a 8091 0000 		lds r24,tx_buffer+4
- 168 006e 9091 0000 		lds r25,(tx_buffer+4)+1
- 169 0072 9093 0000 		sts (tx_buffer+2)+1,r25
- 170 0076 8093 0000 		sts tx_buffer+2,r24
- 171               	.L8:
- 172               	.LSM25:
- 173 007a 8FB7      		in r24,__SREG__
- 174               	.LVL9:
- 175               	.LSM26:
- 176               	/* #APP */
- 177               	 ;  81 "./RingBuffer.h" 1
- 178 007c F894      		cli
- 179               	 ;  0 "" 2
- 180               	.LSM27:
- 181               	/* #NOAPP */
- 182 007e 2150      		subi r18,lo8(-(-1))
- 183 0080 2093 0000 		sts tx_buffer+9,r18
- 184               	.LSM28:
- 185 0084 8FBF      		out __SREG__,r24
- 186               	.LBE66:
- 187               	.LBE65:
- 188               	.LSM29:
- 189 0086 4093 0000 		sts byte.1410,r20
- 190               	.LVL10:
- 191               	.L7:
- 192               	.LSM30:
- 193 008a 8091 0000 		lds r24,byte.1410
- 194               	.LVL11:
- 195 008e 8323      		and r24,r19
- 196 0090 01F0      		breq .L9
- 197               	.LSM31:
- 198 0092 8091 0B01 		lds r24,267
- 199 0096 8160      		ori r24,lo8(1)
- 200 0098 00C0      		rjmp .L13
- 201               	.L9:
- 202               	.LSM32:
- 203 009a 8091 0B01 		lds r24,267
- 204 009e 8E7F      		andi r24,lo8(-2)
- 205               	.L13:
- 206 00a0 8093 0B01 		sts 267,r24
- 207               	.LSM33:
- 208 00a4 832F      		mov r24,r19
- 209 00a6 8695      		lsr r24
- 210 00a8 8093 0000 		sts bit.1409,r24
- 211               	.LSM34:
- 212 00ac 8823      		tst r24
- 213 00ae 01F4      		brne .L11
- 214               	.LSM35:
- 215 00b0 80E8      		ldi r24,lo8(-128)
- 216 00b2 8093 0000 		sts bit.1409,r24
- 217               	.L11:
- 218               	.LBB67:
- 219               	.LBB68:
- 220               	.LBB69:
- 221               	.LBB70:
- 222               	.LSM36:
- 223 00b6 8FB7      		in r24,__SREG__
- 224               	.LVL12:
- 225               	.LSM37:
- 226               	/* #APP */
- 227               	 ;  35 "./RingBuffer.h" 1
- 228 00b8 F894      		cli
- 229               	 ;  0 "" 2
- 230               	.LSM38:
- 231               	/* #NOAPP */
- 232 00ba 8FBF      		out __SREG__,r24
- 233               	.LBE70:
- 234               	.LBE69:
- 235               	.LBE68:
- 236               	.LBE67:
- 237               	.LSM39:
- 238 00bc 8091 0000 		lds r24,tx_buffer+9
- 239               	.LVL13:
- 240 00c0 8823      		tst r24
- 241 00c2 01F4      		brne .L6
- 242               	.LSM40:
- 243 00c4 81E0      		ldi r24,lo8(1)
- 244 00c6 8093 0000 		sts clear_to_send,r24
- 245               	.L6:
- 246               	.LSM41:
- 247 00ca 8091 0B01 		lds r24,267
- 248 00ce 8D7F      		andi r24,lo8(-3)
- 249 00d0 8093 0B01 		sts 267,r24
- 250               	/* epilogue start */
- 251               	.LSM42:
- 252 00d4 FF91      		pop r31
- 253 00d6 EF91      		pop r30
- 254 00d8 9F91      		pop r25
- 255 00da 8F91      		pop r24
- 256 00dc 4F91      		pop r20
- 257               	.LVL14:
- 258 00de 3F91      		pop r19
- 259 00e0 2F91      		pop r18
- 260               	.LVL15:
- 261 00e2 0F90      		pop r0
- 262 00e4 0BBE      		out 91-32,r0
- 263 00e6 0F90      		pop r0
- 264 00e8 0FBE      		out __SREG__,r0
- 265 00ea 0F90      		pop r0
- 266 00ec 1F90      		pop __zero_reg__
- 267 00ee 1895      		reti
- 268               	.LFE21:
- 270               		.section	.text.enable_spi,"ax",@progbits
- 271               	.global	enable_spi
- 273               	enable_spi:
- 274               	.LFB22:
- 275               	.LSM43:
- 276               	/* prologue: function */
- 277               	/* frame size = 0 */
- 278               	.LSM44:
- 279 0000 8CB5      		in r24,76-32
- 280 0002 8064      		ori r24,lo8(64)
- 281 0004 8CBD      		out 76-32,r24
- 282               	/* epilogue start */
- 283               	.LSM45:
- 284 0006 0895      		ret
- 285               	.LFE22:
- 287               		.section	.text.disable_spi,"ax",@progbits
- 288               	.global	disable_spi
- 290               	disable_spi:
- 291               	.LFB23:
- 292               	.LSM46:
- 293               	/* prologue: function */
- 294               	/* frame size = 0 */
- 295               	.LSM47:
- 296 0000 8CB5      		in r24,76-32
- 297 0002 8F7B      		andi r24,lo8(-65)
- 298 0004 8CBD      		out 76-32,r24
- 299               	/* epilogue start */
- 300               	.LSM48:
- 301 0006 0895      		ret
- 302               	.LFE23:
- 304               		.section	.text.send_spi,"ax",@progbits
- 305               	.global	send_spi
- 307               	send_spi:
- 308               	.LFB24:
- 309               	.LSM49:
+  84               	/* #APP */
+  85               	 ;  114 "CC1150_Response.c" 1
+  86 001e 7894      		sei
+  87               	 ;  0 "" 2
+  88               	/* epilogue start */
+  89               	.LSM13:
+  90               	/* #NOAPP */
+  91 0020 0895      		ret
+  92               	.LFE20:
+  94               		.section	.text.disable_pcint,"ax",@progbits
+  95               	.global	disable_pcint
+  97               	disable_pcint:
+  98               	.LFB21:
+  99               	.LSM14:
+ 100               	/* prologue: function */
+ 101               	/* frame size = 0 */
+ 102               	.LSM15:
+ 103 0000 EAE0      		ldi r30,lo8(266)
+ 104 0002 F1E0      		ldi r31,hi8(266)
+ 105 0004 8081      		ld r24,Z
+ 106 0006 8E7F      		andi r24,lo8(-2)
+ 107 0008 8083      		st Z,r24
+ 108               	.LSM16:
+ 109 000a E8E6      		ldi r30,lo8(104)
+ 110 000c F0E0      		ldi r31,hi8(104)
+ 111 000e 8081      		ld r24,Z
+ 112 0010 8E7F      		andi r24,lo8(-2)
+ 113 0012 8083      		st Z,r24
+ 114               	.LSM17:
+ 115 0014 EBE6      		ldi r30,lo8(107)
+ 116 0016 F0E0      		ldi r31,hi8(107)
+ 117 0018 8081      		ld r24,Z
+ 118 001a 877F      		andi r24,lo8(-9)
+ 119 001c 8083      		st Z,r24
+ 120               	.LSM18:
+ 121               	/* #APP */
+ 122               	 ;  124 "CC1150_Response.c" 1
+ 123 001e F894      		cli
+ 124               	 ;  0 "" 2
+ 125               	/* epilogue start */
+ 126               	.LSM19:
+ 127               	/* #NOAPP */
+ 128 0020 0895      		ret
+ 129               	.LFE21:
+ 131               		.section	.text.__vector_9,"ax",@progbits
+ 132               	.global	__vector_9
+ 134               	__vector_9:
+ 135               	.LFB22:
+ 136               	.LSM20:
+ 137 0000 1F92      		push __zero_reg__
+ 138 0002 0F92      		push r0
+ 139 0004 0FB6      		in r0,__SREG__
+ 140 0006 0F92      		push r0
+ 141 0008 0BB6      		in r0,91-32
+ 142 000a 0F92      		push r0
+ 143 000c 1124      		clr __zero_reg__
+ 144 000e 2F93      		push r18
+ 145 0010 3F93      		push r19
+ 146 0012 4F93      		push r20
+ 147 0014 8F93      		push r24
+ 148 0016 9F93      		push r25
+ 149 0018 EF93      		push r30
+ 150 001a FF93      		push r31
+ 151               	/* prologue: Signal */
+ 152               	/* frame size = 0 */
+ 153               	.LSM21:
+ 154 001c 8091 0000 		lds r24,clear_to_send
+ 155 0020 8823      		tst r24
+ 156 0022 01F0      		breq .+2
+ 157 0024 00C0      		rjmp .L13
+ 158 0026 1B9B      		sbis 35-32,3
+ 159 0028 00C0      		rjmp .L13
+ 160               	.LSM22:
+ 161 002a 3091 0000 		lds r19,bit.1423
+ 162 002e 3038      		cpi r19,lo8(-128)
+ 163 0030 01F4      		brne .L9
+ 164               	.LBB60:
+ 165               	.LBB61:
+ 166               	.LBB62:
+ 167               	.LBB63:
+ 168               	.LSM23:
+ 169 0032 8FB7      		in r24,__SREG__
+ 170               	.LVL5:
+ 171               	.LSM24:
+ 172               	/* #APP */
+ 173               	 ;  35 "./RingBuffer.h" 1
+ 174 0034 F894      		cli
+ 175               	 ;  0 "" 2
+ 176               	.LSM25:
+ 177               	/* #NOAPP */
+ 178 0036 2091 0000 		lds r18,tx_buffer+9
+ 179               	.LVL6:
+ 180               	.LSM26:
+ 181 003a 8FBF      		out __SREG__,r24
+ 182               	.LBE63:
+ 183               	.LBE62:
+ 184               	.LBE61:
+ 185               	.LBE60:
+ 186               	.LSM27:
+ 187 003c 2223      		tst r18
+ 188 003e 01F0      		breq .L9
+ 189               	.LBB64:
+ 190               	.LBB65:
+ 191               	.LSM28:
+ 192 0040 E091 0000 		lds r30,tx_buffer+2
+ 193 0044 F091 0000 		lds r31,(tx_buffer+2)+1
+ 194 0048 4191      		ld r20,Z+
+ 195               	.LVL7:
+ 196               	.LSM29:
+ 197 004a F093 0000 		sts (tx_buffer+2)+1,r31
+ 198 004e E093 0000 		sts tx_buffer+2,r30
+ 199 0052 8091 0000 		lds r24,tx_buffer+6
+ 200 0056 9091 0000 		lds r25,(tx_buffer+6)+1
+ 201               	.LVL8:
+ 202 005a E817      		cp r30,r24
+ 203 005c F907      		cpc r31,r25
+ 204 005e 01F4      		brne .L10
+ 205               	.LSM30:
+ 206 0060 8091 0000 		lds r24,tx_buffer+4
+ 207 0064 9091 0000 		lds r25,(tx_buffer+4)+1
+ 208 0068 9093 0000 		sts (tx_buffer+2)+1,r25
+ 209 006c 8093 0000 		sts tx_buffer+2,r24
+ 210               	.L10:
+ 211               	.LSM31:
+ 212 0070 8FB7      		in r24,__SREG__
+ 213               	.LVL9:
+ 214               	.LSM32:
+ 215               	/* #APP */
+ 216               	 ;  81 "./RingBuffer.h" 1
+ 217 0072 F894      		cli
+ 218               	 ;  0 "" 2
+ 219               	.LSM33:
+ 220               	/* #NOAPP */
+ 221 0074 2150      		subi r18,lo8(-(-1))
+ 222 0076 2093 0000 		sts tx_buffer+9,r18
+ 223               	.LSM34:
+ 224 007a 8FBF      		out __SREG__,r24
+ 225               	.LBE65:
+ 226               	.LBE64:
+ 227               	.LSM35:
+ 228 007c 4093 0000 		sts byte.1424,r20
+ 229               	.LVL10:
+ 230               	.L9:
+ 231               	.LSM36:
+ 232 0080 8091 0000 		lds r24,byte.1424
+ 233               	.LVL11:
+ 234 0084 8323      		and r24,r19
+ 235 0086 01F0      		breq .L11
+ 236               	.LSM37:
+ 237 0088 8091 0B01 		lds r24,267
+ 238 008c 8160      		ori r24,lo8(1)
+ 239 008e 00C0      		rjmp .L14
+ 240               	.L11:
+ 241               	.LSM38:
+ 242 0090 8091 0B01 		lds r24,267
+ 243 0094 8E7F      		andi r24,lo8(-2)
+ 244               	.L14:
+ 245 0096 8093 0B01 		sts 267,r24
+ 246               	.LSM39:
+ 247 009a 832F      		mov r24,r19
+ 248 009c 8695      		lsr r24
+ 249 009e 8093 0000 		sts bit.1423,r24
+ 250               	.LSM40:
+ 251 00a2 8823      		tst r24
+ 252 00a4 01F4      		brne .L13
+ 253               	.LSM41:
+ 254 00a6 80E8      		ldi r24,lo8(-128)
+ 255 00a8 8093 0000 		sts bit.1423,r24
+ 256               	.LBB66:
+ 257               	.LBB67:
+ 258               	.LBB68:
+ 259               	.LBB69:
+ 260               	.LSM42:
+ 261 00ac 8FB7      		in r24,__SREG__
+ 262               	.LVL12:
+ 263               	.LSM43:
+ 264               	/* #APP */
+ 265               	 ;  35 "./RingBuffer.h" 1
+ 266 00ae F894      		cli
+ 267               	 ;  0 "" 2
+ 268               	.LSM44:
+ 269               	/* #NOAPP */
+ 270 00b0 8FBF      		out __SREG__,r24
+ 271               	.LBE69:
+ 272               	.LBE68:
+ 273               	.LBE67:
+ 274               	.LBE66:
+ 275               	.LSM45:
+ 276 00b2 8091 0000 		lds r24,tx_buffer+9
+ 277               	.LVL13:
+ 278 00b6 8823      		tst r24
+ 279 00b8 01F4      		brne .L13
+ 280               	.LSM46:
+ 281 00ba 81E0      		ldi r24,lo8(1)
+ 282 00bc 8093 0000 		sts clear_to_send,r24
+ 283               	.L13:
+ 284               	/* epilogue start */
+ 285               	.LSM47:
+ 286 00c0 FF91      		pop r31
+ 287 00c2 EF91      		pop r30
+ 288 00c4 9F91      		pop r25
+ 289 00c6 8F91      		pop r24
+ 290 00c8 4F91      		pop r20
+ 291               	.LVL14:
+ 292 00ca 3F91      		pop r19
+ 293 00cc 2F91      		pop r18
+ 294               	.LVL15:
+ 295 00ce 0F90      		pop r0
+ 296 00d0 0BBE      		out 91-32,r0
+ 297 00d2 0F90      		pop r0
+ 298 00d4 0FBE      		out __SREG__,r0
+ 299 00d6 0F90      		pop r0
+ 300 00d8 1F90      		pop __zero_reg__
+ 301 00da 1895      		reti
+ 302               	.LFE22:
+ 304               		.section	.text.send_command,"ax",@progbits
+ 305               	.global	send_command
+ 307               	send_command:
+ 308               	.LFB28:
+ 309               	.LSM48:
  310               	.LVL16:
  311               	/* prologue: function */
  312               	/* frame size = 0 */
- 313               	.LSM50:
- 314 0000 8EBD      		out 78-32,r24
- 315               	.L19:
- 316               	.LSM51:
- 317 0002 0DB4      		in __tmp_reg__,77-32
- 318 0004 07FE      		sbrs __tmp_reg__,7
- 319 0006 00C0      		rjmp .L19
- 320               	.LSM52:
- 321 0008 8EB5      		in r24,78-32
- 322               	.LVL17:
- 323               	/* epilogue start */
- 324               	.LSM53:
- 325 000a 0895      		ret
- 326               	.LFE24:
- 328               		.section	.text.select,"ax",@progbits
- 329               	.global	select
- 331               	select:
- 332               	.LFB25:
- 333               	.LSM54:
- 334               	/* prologue: function */
- 335               	/* frame size = 0 */
- 336               	.LSM55:
- 337 0000 2898      		cbi 37-32,0
- 338               	/* epilogue start */
- 339               	.LSM56:
- 340 0002 0895      		ret
- 341               	.LFE25:
- 343               		.section	.text.deselect,"ax",@progbits
- 344               	.global	deselect
- 346               	deselect:
- 347               	.LFB26:
- 348               	.LSM57:
- 349               	/* prologue: function */
- 350               	/* frame size = 0 */
- 351               	.LSM58:
- 352 0000 289A      		sbi 37-32,0
- 353               	/* epilogue start */
- 354               	.LSM59:
- 355 0002 0895      		ret
- 356               	.LFE26:
- 358               		.section	.text.send_command,"ax",@progbits
- 359               	.global	send_command
- 361               	send_command:
- 362               	.LFB27:
- 363               	.LSM60:
- 364               	.LVL18:
- 365               	/* prologue: function */
- 366               	/* frame size = 0 */
- 367               	.LBB71:
- 368               	.LBB72:
- 369               	.LSM61:
- 370 0000 2898      		cbi 37-32,0
- 371               	.LBE72:
- 372               	.LBE71:
- 373               	.LBB73:
- 374               	.LBB74:
- 375               	.LSM62:
- 376 0002 8EBD      		out 78-32,r24
- 377               	.L27:
- 378               	.LSM63:
- 379 0004 0DB4      		in __tmp_reg__,77-32
- 380 0006 07FE      		sbrs __tmp_reg__,7
- 381 0008 00C0      		rjmp .L27
- 382               	.LSM64:
- 383 000a 8EB5      		in r24,78-32
- 384               	.LVL19:
- 385               	.LBE74:
- 386               	.LBE73:
- 387               	.LBB75:
- 388               	.LBB76:
- 389               	.LSM65:
- 390 000c 289A      		sbi 37-32,0
- 391               	/* epilogue start */
- 392               	.LBE76:
- 393               	.LBE75:
- 394               	.LSM66:
- 395 000e 0895      		ret
- 396               	.LFE27:
- 398               		.section	.text.send_command_sres,"ax",@progbits
- 399               	.global	send_command_sres
- 401               	send_command_sres:
- 402               	.LFB28:
- 403               	.LSM67:
- 404               	/* prologue: function */
- 405               	/* frame size = 0 */
- 406               	.LBB77:
- 407               	.LBB78:
- 408               	.LSM68:
- 409 0000 2898      		cbi 37-32,0
- 410               	.LBE78:
- 411               	.LBE77:
- 412               	.LBB79:
- 413               	.LBB80:
- 414               	.LSM69:
- 415 0002 80E3      		ldi r24,lo8(48)
- 416 0004 8EBD      		out 78-32,r24
- 417               	.L31:
- 418               	.LSM70:
- 419 0006 0DB4      		in __tmp_reg__,77-32
- 420 0008 07FE      		sbrs __tmp_reg__,7
- 421 000a 00C0      		rjmp .L31
- 422               	.LSM71:
- 423 000c 8EB5      		in r24,78-32
- 424               	.L32:
- 425               	.LBE80:
- 426               	.LBE79:
- 427               	.LSM72:
- 428 000e 1B99      		sbic 35-32,3
- 429 0010 00C0      		rjmp .L32
- 430               	.LBB81:
- 431               	.LBB82:
- 432               	.LSM73:
- 433 0012 289A      		sbi 37-32,0
- 434               	/* epilogue start */
- 435               	.LBE82:
- 436               	.LBE81:
- 437               	.LSM74:
- 438 0014 0895      		ret
- 439               	.LFE28:
- 441               		.section	.text.set_register,"ax",@progbits
- 442               	.global	set_register
- 444               	set_register:
- 445               	.LFB29:
- 446               	.LSM75:
- 447               	.LVL20:
- 448               	/* prologue: function */
- 449               	/* frame size = 0 */
- 450               	.LBB83:
- 451               	.LBB84:
- 452               	.LSM76:
- 453 0000 2898      		cbi 37-32,0
- 454               	.LBE84:
- 455               	.LBE83:
- 456               	.LBB85:
- 457               	.LBB86:
- 458               	.LSM77:
- 459 0002 8EBD      		out 78-32,r24
- 460               	.L37:
- 461               	.LSM78:
- 462 0004 0DB4      		in __tmp_reg__,77-32
- 463 0006 07FE      		sbrs __tmp_reg__,7
- 464 0008 00C0      		rjmp .L37
- 465               	.LSM79:
- 466 000a 8EB5      		in r24,78-32
- 467               	.LVL21:
- 468               	.LBE86:
- 469               	.LBE85:
- 470               	.LBB87:
- 471               	.LBB88:
- 472               	.LSM80:
- 473 000c 6EBD      		out 78-32,r22
- 474               	.L38:
- 475               	.LSM81:
- 476 000e 0DB4      		in __tmp_reg__,77-32
- 477 0010 07FE      		sbrs __tmp_reg__,7
- 478 0012 00C0      		rjmp .L38
- 479               	.LSM82:
- 480 0014 8EB5      		in r24,78-32
- 481               	.LBE88:
- 482               	.LBE87:
- 483               	.LBB89:
- 484               	.LBB90:
- 485               	.LSM83:
- 486 0016 289A      		sbi 37-32,0
- 487               	/* epilogue start */
- 488               	.LBE90:
- 489               	.LBE89:
- 490               	.LSM84:
- 491 0018 0895      		ret
- 492               	.LFE29:
- 494               		.section	.text.set_register_burst,"ax",@progbits
- 495               	.global	set_register_burst
- 497               	set_register_burst:
- 498               	.LFB30:
- 499               	.LSM85:
- 500               	.LVL22:
- 501               	/* prologue: function */
- 502               	/* frame size = 0 */
- 503               	.LBB91:
- 504               	.LBB92:
- 505               	.LSM86:
- 506 0000 2898      		cbi 37-32,0
- 507               	.LBE92:
- 508               	.LBE91:
- 509               	.LBB93:
- 510               	.LBB94:
- 511               	.LSM87:
- 512 0002 8EBD      		out 78-32,r24
- 513               	.L43:
- 514               	.LSM88:
- 515 0004 0DB4      		in __tmp_reg__,77-32
- 516 0006 07FE      		sbrs __tmp_reg__,7
- 517 0008 00C0      		rjmp .L43
- 518               	.LSM89:
- 519 000a 8EB5      		in r24,78-32
- 520               	.LVL23:
- 521 000c FB01      		movw r30,r22
- 522               	.LVL24:
- 523 000e 90E0      		ldi r25,lo8(0)
- 524               	.LVL25:
- 525 0010 00C0      		rjmp .L44
- 526               	.L46:
- 527               	.LBE94:
- 528               	.LBE93:
- 529               	.LSM90:
- 530 0012 8081      		ld r24,Z
- 531               	.LBB95:
- 532               	.LBB96:
- 533               	.LSM91:
- 534 0014 8EBD      		out 78-32,r24
- 535               	.L45:
- 536               	.LSM92:
- 537 0016 0DB4      		in __tmp_reg__,77-32
- 538 0018 07FE      		sbrs __tmp_reg__,7
- 539 001a 00C0      		rjmp .L45
- 540               	.LSM93:
- 541 001c 8EB5      		in r24,78-32
- 542               	.LBE96:
- 543               	.LBE95:
- 544               	.LSM94:
- 545 001e 9F5F      		subi r25,lo8(-(1))
- 546 0020 3196      		adiw r30,1
- 547               	.L44:
- 548 0022 9417      		cp r25,r20
- 549 0024 00F0      		brlo .L46
- 550               	.LBB97:
- 551               	.LBB98:
- 552               	.LSM95:
- 553 0026 289A      		sbi 37-32,0
- 554               	/* epilogue start */
- 555               	.LBE98:
- 556               	.LBE97:
- 557               	.LSM96:
- 558 0028 0895      		ret
- 559               	.LFE30:
- 561               		.section	.text.write_settings,"ax",@progbits
- 562               	.global	write_settings
- 564               	write_settings:
- 565               	.LFB31:
- 566               	.LSM97:
- 567               	.LVL26:
- 568 0000 0F93      		push r16
- 569 0002 1F93      		push r17
- 570               	/* prologue: function */
- 571               	/* frame size = 0 */
- 572 0004 8C01      		movw r16,r24
- 573               	.LSM98:
- 574 0006 81E0      		ldi r24,lo8(1)
- 575               	.LVL27:
- 576 0008 F801      		movw r30,r16
- 577 000a 6081      		ld r22,Z
- 578 000c 0E94 0000 		call set_register
- 579               	.LSM99:
- 580 0010 82E0      		ldi r24,lo8(2)
- 581 0012 F801      		movw r30,r16
- 582 0014 6181      		ldd r22,Z+1
- 583 0016 0E94 0000 		call set_register
- 584               	.LSM100:
- 585 001a 83E0      		ldi r24,lo8(3)
- 586 001c F801      		movw r30,r16
- 587 001e 6281      		ldd r22,Z+2
- 588 0020 0E94 0000 		call set_register
- 589               	.LSM101:
- 590 0024 84E0      		ldi r24,lo8(4)
- 591 0026 F801      		movw r30,r16
- 592 0028 6381      		ldd r22,Z+3
- 593 002a 0E94 0000 		call set_register
- 594               	.LSM102:
- 595 002e 85E0      		ldi r24,lo8(5)
- 596 0030 F801      		movw r30,r16
- 597 0032 6481      		ldd r22,Z+4
- 598 0034 0E94 0000 		call set_register
- 599               	.LSM103:
- 600 0038 86E0      		ldi r24,lo8(6)
- 601 003a F801      		movw r30,r16
- 602 003c 6581      		ldd r22,Z+5
- 603 003e 0E94 0000 		call set_register
- 604               	.LSM104:
- 605 0042 88E0      		ldi r24,lo8(8)
- 606 0044 F801      		movw r30,r16
- 607 0046 6681      		ldd r22,Z+6
- 608 0048 0E94 0000 		call set_register
- 609               	.LSM105:
- 610 004c 89E0      		ldi r24,lo8(9)
- 611 004e F801      		movw r30,r16
- 612 0050 6781      		ldd r22,Z+7
- 613 0052 0E94 0000 		call set_register
- 614               	.LSM106:
- 615 0056 8AE0      		ldi r24,lo8(10)
- 616 0058 F801      		movw r30,r16
- 617 005a 6085      		ldd r22,Z+8
- 618 005c 0E94 0000 		call set_register
- 619               	.LSM107:
- 620 0060 8DE0      		ldi r24,lo8(13)
- 621 0062 F801      		movw r30,r16
- 622 0064 6185      		ldd r22,Z+9
- 623 0066 0E94 0000 		call set_register
- 624               	.LSM108:
- 625 006a 8EE0      		ldi r24,lo8(14)
- 626 006c F801      		movw r30,r16
- 627 006e 6285      		ldd r22,Z+10
- 628 0070 0E94 0000 		call set_register
- 629               	.LSM109:
- 630 0074 8FE0      		ldi r24,lo8(15)
- 631 0076 F801      		movw r30,r16
- 632 0078 6385      		ldd r22,Z+11
- 633 007a 0E94 0000 		call set_register
- 634               	.LSM110:
- 635 007e 80E1      		ldi r24,lo8(16)
- 636 0080 F801      		movw r30,r16
- 637 0082 6485      		ldd r22,Z+12
- 638 0084 0E94 0000 		call set_register
- 639               	.LSM111:
- 640 0088 81E1      		ldi r24,lo8(17)
- 641 008a F801      		movw r30,r16
- 642 008c 6585      		ldd r22,Z+13
- 643 008e 0E94 0000 		call set_register
- 644               	.LSM112:
- 645 0092 82E1      		ldi r24,lo8(18)
- 646 0094 F801      		movw r30,r16
- 647 0096 6685      		ldd r22,Z+14
- 648 0098 0E94 0000 		call set_register
- 649               	.LSM113:
- 650 009c 83E1      		ldi r24,lo8(19)
- 651 009e F801      		movw r30,r16
- 652 00a0 6785      		ldd r22,Z+15
- 653 00a2 0E94 0000 		call set_register
- 654               	.LSM114:
- 655 00a6 84E1      		ldi r24,lo8(20)
- 656 00a8 F801      		movw r30,r16
- 657 00aa 6089      		ldd r22,Z+16
- 658 00ac 0E94 0000 		call set_register
- 659               	.LSM115:
- 660 00b0 85E1      		ldi r24,lo8(21)
- 661 00b2 F801      		movw r30,r16
- 662 00b4 6189      		ldd r22,Z+17
- 663 00b6 0E94 0000 		call set_register
- 664               	.LSM116:
- 665 00ba 87E1      		ldi r24,lo8(23)
- 666 00bc F801      		movw r30,r16
- 667 00be 6289      		ldd r22,Z+18
- 668 00c0 0E94 0000 		call set_register
- 669               	.LSM117:
- 670 00c4 88E1      		ldi r24,lo8(24)
- 671 00c6 F801      		movw r30,r16
- 672 00c8 6389      		ldd r22,Z+19
- 673 00ca 0E94 0000 		call set_register
- 674               	.LSM118:
- 675 00ce 82E2      		ldi r24,lo8(34)
- 676 00d0 F801      		movw r30,r16
- 677 00d2 6489      		ldd r22,Z+20
- 678 00d4 0E94 0000 		call set_register
- 679               	.LSM119:
- 680 00d8 83E2      		ldi r24,lo8(35)
- 681 00da F801      		movw r30,r16
- 682 00dc 6589      		ldd r22,Z+21
- 683 00de 0E94 0000 		call set_register
- 684               	.LSM120:
- 685 00e2 84E2      		ldi r24,lo8(36)
- 686 00e4 F801      		movw r30,r16
- 687 00e6 6689      		ldd r22,Z+22
- 688 00e8 0E94 0000 		call set_register
- 689               	.LSM121:
- 690 00ec 85E2      		ldi r24,lo8(37)
- 691 00ee F801      		movw r30,r16
- 692 00f0 6789      		ldd r22,Z+23
- 693 00f2 0E94 0000 		call set_register
- 694               	.LSM122:
- 695 00f6 86E2      		ldi r24,lo8(38)
- 696 00f8 F801      		movw r30,r16
- 697 00fa 608D      		ldd r22,Z+24
- 698 00fc 0E94 0000 		call set_register
- 699               	.LSM123:
- 700 0100 89E2      		ldi r24,lo8(41)
- 701 0102 F801      		movw r30,r16
- 702 0104 618D      		ldd r22,Z+25
- 703 0106 0E94 0000 		call set_register
- 704               	.LSM124:
- 705 010a 8AE2      		ldi r24,lo8(42)
- 706 010c F801      		movw r30,r16
- 707 010e 628D      		ldd r22,Z+26
- 708 0110 0E94 0000 		call set_register
- 709               	.LSM125:
- 710 0114 8CE2      		ldi r24,lo8(44)
- 711 0116 F801      		movw r30,r16
- 712 0118 638D      		ldd r22,Z+27
- 713 011a 0E94 0000 		call set_register
- 714               	/* epilogue start */
- 715               	.LSM126:
- 716 011e 1F91      		pop r17
- 717 0120 0F91      		pop r16
- 718               	.LVL28:
- 719 0122 0895      		ret
- 720               	.LFE31:
- 722               		.section	.text.main,"ax",@progbits
- 723               	.global	main
- 725               	main:
- 726               	.LFB32:
- 727               	.LSM127:
- 728 0000 CF93      		push r28
- 729 0002 DF93      		push r29
- 730               	/* prologue: function */
- 731               	/* frame size = 0 */
- 732               	.LSM128:
- 733 0004 80E8      		ldi r24,lo8(-128)
- 734 0006 8093 6100 		sts 97,r24
- 735 000a 1092 6100 		sts 97,__zero_reg__
- 736               	.LSM129:
- 737 000e 8091 0A01 		lds r24,266
- 738 0012 8160      		ori r24,lo8(1)
- 739 0014 8093 0A01 		sts 266,r24
- 740               	.LSM130:
- 741 0018 8091 0A01 		lds r24,266
- 742 001c 8260      		ori r24,lo8(2)
- 743 001e 8093 0A01 		sts 266,r24
- 744               	.LSM131:
- 745 0022 80E0      		ldi r24,lo8(0)
- 746 0024 0E94 0000 		call setup_spi
- 747               	.LBB99:
- 748               	.LBB100:
- 749               	.LSM132:
- 750 0028 8CB5      		in r24,76-32
- 751 002a 8064      		ori r24,lo8(64)
- 752 002c 8CBD      		out 76-32,r24
- 753               	.LBE100:
- 754               	.LBE99:
- 755               	.LBB101:
- 756               	.LBB102:
- 757               	.LSM133:
- 758 002e 8091 6800 		lds r24,104
- 759 0032 8160      		ori r24,lo8(1)
- 760 0034 8093 6800 		sts 104,r24
- 761               	.LSM134:
- 762 0038 8091 6B00 		lds r24,107
- 763 003c 8860      		ori r24,lo8(8)
- 764 003e 8093 6B00 		sts 107,r24
- 765               	.LSM135:
- 766               	/* #APP */
- 767               	 ;  106 "CC1150_Response.c" 1
- 768 0042 7894      		sei
- 769               	 ;  0 "" 2
- 770               	/* #NOAPP */
- 771               	.LBE102:
- 772               	.LBE101:
- 773               	.LBB103:
- 774               	.LBB104:
- 775               	.LSM136:
- 776 0044 2FB7      		in r18,__SREG__
- 777               	.LVL29:
- 778               	.LSM137:
- 779               	/* #APP */
- 780               	 ;  18 "./RingBuffer.h" 1
- 781 0046 F894      		cli
- 782               	 ;  0 "" 2
- 783               	.LSM138:
- 784               	/* #NOAPP */
- 785 0048 80E0      		ldi r24,lo8(tx_buffer_data)
- 786 004a 90E0      		ldi r25,hi8(tx_buffer_data)
- 787 004c 9093 0000 		sts (tx_buffer)+1,r25
- 788 0050 8093 0000 		sts tx_buffer,r24
- 789               	.LSM139:
- 790 0054 9093 0000 		sts (tx_buffer+2)+1,r25
- 791 0058 8093 0000 		sts tx_buffer+2,r24
- 792               	.LSM140:
- 793 005c 9093 0000 		sts (tx_buffer+4)+1,r25
- 794 0060 8093 0000 		sts tx_buffer+4,r24
- 795               	.LSM141:
- 796 0064 8096      		adiw r24,32
- 797 0066 9093 0000 		sts (tx_buffer+6)+1,r25
- 798 006a 8093 0000 		sts tx_buffer+6,r24
- 799               	.LSM142:
- 800 006e 80E2      		ldi r24,lo8(32)
- 801 0070 8093 0000 		sts tx_buffer+8,r24
- 802               	.LSM143:
- 803 0074 1092 0000 		sts tx_buffer+9,__zero_reg__
- 804               	.LSM144:
- 805 0078 2FBF      		out __SREG__,r18
- 806               	.LBE104:
- 807               	.LBE103:
- 808               	.LSM145:
- 809 007a 0E94 0000 		call send_command_sres
- 810               	.LVL30:
- 811               	.LSM146:
- 812 007e 80E0      		ldi r24,lo8(regSettings)
- 813 0080 90E0      		ldi r25,hi8(regSettings)
- 814 0082 0E94 0000 		call write_settings
- 815               	.LSM147:
- 816 0086 8EE7      		ldi r24,lo8(126)
- 817 0088 60E0      		ldi r22,lo8(paTable)
- 818 008a 70E0      		ldi r23,hi8(paTable)
- 819 008c 48E0      		ldi r20,lo8(8)
- 820 008e 0E94 0000 		call set_register_burst
- 821 0092 40E0      		ldi r20,lo8(0)
- 822 0094 50E0      		ldi r21,hi8(0)
- 823               	.LVL31:
- 824               	.LBB105:
- 825               	.LBB106:
- 826               	.LBB107:
- 827               	.LBB108:
- 828               	.LSM148:
- 829 0096 C0E9      		ldi r28,lo8(400)
- 830 0098 D1E0      		ldi r29,hi8(400)
- 831 009a 00C0      		rjmp .L61
- 832               	.LVL32:
- 833               	.L55:
- 834               	.LBE108:
- 835               	.LBE107:
- 836               	.LBE106:
- 837               	.LBE105:
- 838               	.LBB112:
- 839               	.LBB113:
- 840               	.LBB114:
- 841               	.LSM149:
- 842 009c A091 0000 		lds r26,tx_buffer
- 843 00a0 B091 0000 		lds r27,(tx_buffer)+1
- 844 00a4 FA01      		movw r30,r20
- 845               	.LVL33:
- 846 00a6 E050      		subi r30,lo8(-(signature))
- 847 00a8 F040      		sbci r31,hi8(-(signature))
- 848 00aa 8081      		ld r24,Z
- 849               	.LVL34:
- 850 00ac 8C93      		st X,r24
- 851               	.LSM150:
- 852 00ae 8091 0000 		lds r24,tx_buffer
- 853 00b2 9091 0000 		lds r25,(tx_buffer)+1
- 854 00b6 0196      		adiw r24,1
- 855 00b8 9093 0000 		sts (tx_buffer)+1,r25
- 856 00bc 8093 0000 		sts tx_buffer,r24
- 857 00c0 2091 0000 		lds r18,tx_buffer+6
- 858 00c4 3091 0000 		lds r19,(tx_buffer+6)+1
- 859 00c8 8217      		cp r24,r18
- 860 00ca 9307      		cpc r25,r19
- 861 00cc 01F4      		brne .L54
- 862               	.LSM151:
- 863 00ce 8091 0000 		lds r24,tx_buffer+4
- 864 00d2 9091 0000 		lds r25,(tx_buffer+4)+1
- 865 00d6 9093 0000 		sts (tx_buffer)+1,r25
- 866 00da 8093 0000 		sts tx_buffer,r24
- 867               	.L54:
- 868               	.LSM152:
- 869 00de 9FB7      		in r25,__SREG__
- 870               	.LSM153:
- 871               	/* #APP */
- 872               	 ;  66 "./RingBuffer.h" 1
- 873 00e0 F894      		cli
- 874               	 ;  0 "" 2
- 875               	.LSM154:
- 876               	/* #NOAPP */
- 877 00e2 8091 0000 		lds r24,tx_buffer+9
- 878 00e6 8F5F      		subi r24,lo8(-(1))
- 879 00e8 8093 0000 		sts tx_buffer+9,r24
- 880               	.LSM155:
- 881 00ec 9FBF      		out __SREG__,r25
- 882               	.LBE114:
- 883               	.LBE113:
- 884               	.LSM156:
- 885 00ee 4F5F      		subi r20,lo8(-(1))
- 886 00f0 5F4F      		sbci r21,hi8(-(1))
- 887               	.LVL35:
- 888               	.L61:
- 889 00f2 4231      		cpi r20,18
- 890 00f4 5105      		cpc r21,__zero_reg__
- 891 00f6 04F0      		brlt .L55
- 892               	.LBE112:
- 893               	.LSM157:
- 894 00f8 85E3      		ldi r24,lo8(53)
- 895               	.LVL36:
- 896 00fa 0E94 0000 		call send_command
- 897               	.LVL37:
- 898               	.LSM158:
- 899 00fe 1092 0000 		sts clear_to_send,__zero_reg__
- 900               	.L56:
- 901               	.LSM159:
- 902 0102 8091 0000 		lds r24,clear_to_send
- 903 0106 8823      		tst r24
- 904 0108 01F0      		breq .L56
- 905               	.LSM160:
- 906 010a 81E3      		ldi r24,lo8(49)
- 907 010c 0E94 0000 		call send_command
- 908 0110 80E1      		ldi r24,lo8(10000)
- 909 0112 97E2      		ldi r25,hi8(10000)
- 910               	.LVL38:
- 911               	.L57:
- 912               	.LBB115:
- 913               	.LBB111:
- 914               	.LBB110:
- 915               	.LBB109:
- 916               	.LSM161:
- 917 0114 FE01      		movw r30,r28
- 918               	.LVL39:
- 919               	/* #APP */
- 920               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
- 921 0116 3197      		1: sbiw r30,1
- 922 0118 01F4      		brne 1b
- 923               	 ;  0 "" 2
- 924               	/* #NOAPP */
- 925               	.LBE109:
- 926               	.LBE110:
- 927               	.LSM162:
- 928 011a 0197      		sbiw r24,1
- 929               	.LSM163:
- 930 011c 01F4      		brne .L57
- 931 011e 40E0      		ldi r20,lo8(0)
- 932 0120 50E0      		ldi r21,hi8(0)
- 933               	.LVL40:
- 934 0122 00C0      		rjmp .L61
- 935               	.LBE111:
- 936               	.LBE115:
- 937               	.LFE32:
- 939               	.global	regSettings
- 940               		.data
- 943               	regSettings:
- 944 0000 0B        		.byte	11
- 945 0001 0C        		.byte	12
- 946 0002 07        		.byte	7
- 947 0003 D3        		.byte	-45
- 948 0004 91        		.byte	-111
- 949 0005 FF        		.byte	-1
- 950 0006 12        		.byte	18
- 951 0007 00        		.byte	0
- 952 0008 00        		.byte	0
- 953 0009 21        		.byte	33
- 954 000a 65        		.byte	101
- 955 000b 6A        		.byte	106
- 956 000c 87        		.byte	-121
- 957 000d F8        		.byte	-8
- 958 000e 00        		.byte	0
- 959 000f 22        		.byte	34
- 960 0010 F8        		.byte	-8
- 961 0011 50        		.byte	80
- 962 0012 30        		.byte	48
- 963 0013 18        		.byte	24
- 964 0014 15        		.byte	21
- 965 0015 E9        		.byte	-23
- 966 0016 2A        		.byte	42
- 967 0017 00        		.byte	0
- 968 0018 1F        		.byte	31
- 969 0019 59        		.byte	89
- 970 001a 35        		.byte	53
- 971 001b 09        		.byte	9
- 972               	.global	paTable
- 975               	paTable:
- 976 001c 01        		.byte	1
- 977 001d 0B        		.byte	11
- 978 001e 25        		.byte	37
- 979 001f 68        		.byte	104
- 980 0020 60        		.byte	96
- 981 0021 86        		.byte	-122
- 982 0022 CC        		.byte	-52
- 983 0023 C3        		.byte	-61
- 984               	.global	signature
- 987               	signature:
- 988 0024 E2        		.byte	-30
- 989 0025 4D        		.byte	77
- 990 0026 A4        		.byte	-92
- 991 0027 9B        		.byte	-101
- 992 0028 69        		.byte	105
- 993 0029 B6        		.byte	-74
- 994 002a DA        		.byte	-38
- 995 002b 6D        		.byte	109
- 996 002c 24        		.byte	36
- 997 002d 92        		.byte	-110
- 998 002e 69        		.byte	105
- 999 002f 24        		.byte	36
- 1000 0030 92        		.byte	-110
- 1001 0031 49        		.byte	73
- 1002 0032 24        		.byte	36
- 1003 0033 92        		.byte	-110
- 1004 0034 49        		.byte	73
- 1005 0035 A4        		.byte	-92
- 1006               	.global	sig_length
- 1009               	sig_length:
- 1010 0036 12        		.byte	18
- 1011               	.global	clear_to_send
- 1014               	clear_to_send:
- 1015 0037 01        		.byte	1
- 1016               		.lcomm byte.1410,1
- 1019               	bit.1409:
- 1020 0038 80        		.byte	-128
- 1021               		.comm tx_buffer,10,1
- 1022               		.comm tx_buffer_data,32,1
- 1151               	.Letext0:
+ 313               	.LBB70:
+ 314               	.LBB71:
+ 315               	.LSM49:
+ 316 0000 2898      		cbi 37-32,0
+ 317               	.LBE71:
+ 318               	.LBE70:
+ 319               	.LBB72:
+ 320               	.LBB73:
+ 321               	.LSM50:
+ 322 0002 8EBD      		out 78-32,r24
+ 323               	.L16:
+ 324               	.LSM51:
+ 325 0004 0DB4      		in __tmp_reg__,77-32
+ 326 0006 07FE      		sbrs __tmp_reg__,7
+ 327 0008 00C0      		rjmp .L16
+ 328               	.LSM52:
+ 329 000a 8EB5      		in r24,78-32
+ 330               	.LVL17:
+ 331               	.LBE73:
+ 332               	.LBE72:
+ 333               	.LBB74:
+ 334               	.LBB75:
+ 335               	.LSM53:
+ 336 000c 289A      		sbi 37-32,0
+ 337               	/* epilogue start */
+ 338               	.LBE75:
+ 339               	.LBE74:
+ 340               	.LSM54:
+ 341 000e 0895      		ret
+ 342               	.LFE28:
+ 344               		.section	.text.send_command_sres,"ax",@progbits
+ 345               	.global	send_command_sres
+ 347               	send_command_sres:
+ 348               	.LFB29:
+ 349               	.LSM55:
+ 350               	/* prologue: function */
+ 351               	/* frame size = 0 */
+ 352               	.LBB76:
+ 353               	.LBB77:
+ 354               	.LSM56:
+ 355 0000 2898      		cbi 37-32,0
+ 356               	.LBE77:
+ 357               	.LBE76:
+ 358               	.LBB78:
+ 359               	.LBB79:
+ 360               	.LSM57:
+ 361 0002 80E3      		ldi r24,lo8(48)
+ 362 0004 8EBD      		out 78-32,r24
+ 363               	.L20:
+ 364               	.LSM58:
+ 365 0006 0DB4      		in __tmp_reg__,77-32
+ 366 0008 07FE      		sbrs __tmp_reg__,7
+ 367 000a 00C0      		rjmp .L20
+ 368               	.LSM59:
+ 369 000c 8EB5      		in r24,78-32
+ 370               	.L21:
+ 371               	.LBE79:
+ 372               	.LBE78:
+ 373               	.LSM60:
+ 374 000e 1B99      		sbic 35-32,3
+ 375 0010 00C0      		rjmp .L21
+ 376               	.LBB80:
+ 377               	.LBB81:
+ 378               	.LSM61:
+ 379 0012 289A      		sbi 37-32,0
+ 380               	/* epilogue start */
+ 381               	.LBE81:
+ 382               	.LBE80:
+ 383               	.LSM62:
+ 384 0014 0895      		ret
+ 385               	.LFE29:
+ 387               		.section	.text.set_register,"ax",@progbits
+ 388               	.global	set_register
+ 390               	set_register:
+ 391               	.LFB30:
+ 392               	.LSM63:
+ 393               	.LVL18:
+ 394               	/* prologue: function */
+ 395               	/* frame size = 0 */
+ 396               	.LBB82:
+ 397               	.LBB83:
+ 398               	.LSM64:
+ 399 0000 2898      		cbi 37-32,0
+ 400               	.LBE83:
+ 401               	.LBE82:
+ 402               	.LBB84:
+ 403               	.LBB85:
+ 404               	.LSM65:
+ 405 0002 8EBD      		out 78-32,r24
+ 406               	.L26:
+ 407               	.LSM66:
+ 408 0004 0DB4      		in __tmp_reg__,77-32
+ 409 0006 07FE      		sbrs __tmp_reg__,7
+ 410 0008 00C0      		rjmp .L26
+ 411               	.LSM67:
+ 412 000a 8EB5      		in r24,78-32
+ 413               	.LVL19:
+ 414               	.LBE85:
+ 415               	.LBE84:
+ 416               	.LBB86:
+ 417               	.LBB87:
+ 418               	.LSM68:
+ 419 000c 6EBD      		out 78-32,r22
+ 420               	.L27:
+ 421               	.LSM69:
+ 422 000e 0DB4      		in __tmp_reg__,77-32
+ 423 0010 07FE      		sbrs __tmp_reg__,7
+ 424 0012 00C0      		rjmp .L27
+ 425               	.LSM70:
+ 426 0014 8EB5      		in r24,78-32
+ 427               	.LBE87:
+ 428               	.LBE86:
+ 429               	.LBB88:
+ 430               	.LBB89:
+ 431               	.LSM71:
+ 432 0016 289A      		sbi 37-32,0
+ 433               	/* epilogue start */
+ 434               	.LBE89:
+ 435               	.LBE88:
+ 436               	.LSM72:
+ 437 0018 0895      		ret
+ 438               	.LFE30:
+ 440               		.section	.text.set_register_burst,"ax",@progbits
+ 441               	.global	set_register_burst
+ 443               	set_register_burst:
+ 444               	.LFB31:
+ 445               	.LSM73:
+ 446               	.LVL20:
+ 447               	/* prologue: function */
+ 448               	/* frame size = 0 */
+ 449               	.LBB90:
+ 450               	.LBB91:
+ 451               	.LSM74:
+ 452 0000 2898      		cbi 37-32,0
+ 453               	.LBE91:
+ 454               	.LBE90:
+ 455               	.LBB92:
+ 456               	.LBB93:
+ 457               	.LSM75:
+ 458 0002 8EBD      		out 78-32,r24
+ 459               	.L32:
+ 460               	.LSM76:
+ 461 0004 0DB4      		in __tmp_reg__,77-32
+ 462 0006 07FE      		sbrs __tmp_reg__,7
+ 463 0008 00C0      		rjmp .L32
+ 464               	.LSM77:
+ 465 000a 8EB5      		in r24,78-32
+ 466               	.LVL21:
+ 467 000c FB01      		movw r30,r22
+ 468               	.LVL22:
+ 469 000e 90E0      		ldi r25,lo8(0)
+ 470               	.LVL23:
+ 471 0010 00C0      		rjmp .L33
+ 472               	.L35:
+ 473               	.LBE93:
+ 474               	.LBE92:
+ 475               	.LSM78:
+ 476 0012 8081      		ld r24,Z
+ 477               	.LBB94:
+ 478               	.LBB95:
+ 479               	.LSM79:
+ 480 0014 8EBD      		out 78-32,r24
+ 481               	.L34:
+ 482               	.LSM80:
+ 483 0016 0DB4      		in __tmp_reg__,77-32
+ 484 0018 07FE      		sbrs __tmp_reg__,7
+ 485 001a 00C0      		rjmp .L34
+ 486               	.LSM81:
+ 487 001c 8EB5      		in r24,78-32
+ 488               	.LBE95:
+ 489               	.LBE94:
+ 490               	.LSM82:
+ 491 001e 9F5F      		subi r25,lo8(-(1))
+ 492 0020 3196      		adiw r30,1
+ 493               	.L33:
+ 494 0022 9417      		cp r25,r20
+ 495 0024 00F0      		brlo .L35
+ 496               	.LBB96:
+ 497               	.LBB97:
+ 498               	.LSM83:
+ 499 0026 289A      		sbi 37-32,0
+ 500               	/* epilogue start */
+ 501               	.LBE97:
+ 502               	.LBE96:
+ 503               	.LSM84:
+ 504 0028 0895      		ret
+ 505               	.LFE31:
+ 507               		.section	.text.write_settings,"ax",@progbits
+ 508               	.global	write_settings
+ 510               	write_settings:
+ 511               	.LFB32:
+ 512               	.LSM85:
+ 513               	.LVL24:
+ 514 0000 0F93      		push r16
+ 515 0002 1F93      		push r17
+ 516               	/* prologue: function */
+ 517               	/* frame size = 0 */
+ 518 0004 8C01      		movw r16,r24
+ 519               	.LSM86:
+ 520 0006 81E0      		ldi r24,lo8(1)
+ 521               	.LVL25:
+ 522 0008 F801      		movw r30,r16
+ 523 000a 6081      		ld r22,Z
+ 524 000c 0E94 0000 		call set_register
+ 525               	.LSM87:
+ 526 0010 82E0      		ldi r24,lo8(2)
+ 527 0012 F801      		movw r30,r16
+ 528 0014 6181      		ldd r22,Z+1
+ 529 0016 0E94 0000 		call set_register
+ 530               	.LSM88:
+ 531 001a 83E0      		ldi r24,lo8(3)
+ 532 001c F801      		movw r30,r16
+ 533 001e 6281      		ldd r22,Z+2
+ 534 0020 0E94 0000 		call set_register
+ 535               	.LSM89:
+ 536 0024 84E0      		ldi r24,lo8(4)
+ 537 0026 F801      		movw r30,r16
+ 538 0028 6381      		ldd r22,Z+3
+ 539 002a 0E94 0000 		call set_register
+ 540               	.LSM90:
+ 541 002e 85E0      		ldi r24,lo8(5)
+ 542 0030 F801      		movw r30,r16
+ 543 0032 6481      		ldd r22,Z+4
+ 544 0034 0E94 0000 		call set_register
+ 545               	.LSM91:
+ 546 0038 86E0      		ldi r24,lo8(6)
+ 547 003a F801      		movw r30,r16
+ 548 003c 6581      		ldd r22,Z+5
+ 549 003e 0E94 0000 		call set_register
+ 550               	.LSM92:
+ 551 0042 88E0      		ldi r24,lo8(8)
+ 552 0044 F801      		movw r30,r16
+ 553 0046 6681      		ldd r22,Z+6
+ 554 0048 0E94 0000 		call set_register
+ 555               	.LSM93:
+ 556 004c 89E0      		ldi r24,lo8(9)
+ 557 004e F801      		movw r30,r16
+ 558 0050 6781      		ldd r22,Z+7
+ 559 0052 0E94 0000 		call set_register
+ 560               	.LSM94:
+ 561 0056 8AE0      		ldi r24,lo8(10)
+ 562 0058 F801      		movw r30,r16
+ 563 005a 6085      		ldd r22,Z+8
+ 564 005c 0E94 0000 		call set_register
+ 565               	.LSM95:
+ 566 0060 8DE0      		ldi r24,lo8(13)
+ 567 0062 F801      		movw r30,r16
+ 568 0064 6185      		ldd r22,Z+9
+ 569 0066 0E94 0000 		call set_register
+ 570               	.LSM96:
+ 571 006a 8EE0      		ldi r24,lo8(14)
+ 572 006c F801      		movw r30,r16
+ 573 006e 6285      		ldd r22,Z+10
+ 574 0070 0E94 0000 		call set_register
+ 575               	.LSM97:
+ 576 0074 8FE0      		ldi r24,lo8(15)
+ 577 0076 F801      		movw r30,r16
+ 578 0078 6385      		ldd r22,Z+11
+ 579 007a 0E94 0000 		call set_register
+ 580               	.LSM98:
+ 581 007e 80E1      		ldi r24,lo8(16)
+ 582 0080 F801      		movw r30,r16
+ 583 0082 6485      		ldd r22,Z+12
+ 584 0084 0E94 0000 		call set_register
+ 585               	.LSM99:
+ 586 0088 81E1      		ldi r24,lo8(17)
+ 587 008a F801      		movw r30,r16
+ 588 008c 6585      		ldd r22,Z+13
+ 589 008e 0E94 0000 		call set_register
+ 590               	.LSM100:
+ 591 0092 82E1      		ldi r24,lo8(18)
+ 592 0094 F801      		movw r30,r16
+ 593 0096 6685      		ldd r22,Z+14
+ 594 0098 0E94 0000 		call set_register
+ 595               	.LSM101:
+ 596 009c 83E1      		ldi r24,lo8(19)
+ 597 009e F801      		movw r30,r16
+ 598 00a0 6785      		ldd r22,Z+15
+ 599 00a2 0E94 0000 		call set_register
+ 600               	.LSM102:
+ 601 00a6 84E1      		ldi r24,lo8(20)
+ 602 00a8 F801      		movw r30,r16
+ 603 00aa 6089      		ldd r22,Z+16
+ 604 00ac 0E94 0000 		call set_register
+ 605               	.LSM103:
+ 606 00b0 85E1      		ldi r24,lo8(21)
+ 607 00b2 F801      		movw r30,r16
+ 608 00b4 6189      		ldd r22,Z+17
+ 609 00b6 0E94 0000 		call set_register
+ 610               	.LSM104:
+ 611 00ba 87E1      		ldi r24,lo8(23)
+ 612 00bc F801      		movw r30,r16
+ 613 00be 6289      		ldd r22,Z+18
+ 614 00c0 0E94 0000 		call set_register
+ 615               	.LSM105:
+ 616 00c4 88E1      		ldi r24,lo8(24)
+ 617 00c6 F801      		movw r30,r16
+ 618 00c8 6389      		ldd r22,Z+19
+ 619 00ca 0E94 0000 		call set_register
+ 620               	.LSM106:
+ 621 00ce 82E2      		ldi r24,lo8(34)
+ 622 00d0 F801      		movw r30,r16
+ 623 00d2 6489      		ldd r22,Z+20
+ 624 00d4 0E94 0000 		call set_register
+ 625               	.LSM107:
+ 626 00d8 83E2      		ldi r24,lo8(35)
+ 627 00da F801      		movw r30,r16
+ 628 00dc 6589      		ldd r22,Z+21
+ 629 00de 0E94 0000 		call set_register
+ 630               	.LSM108:
+ 631 00e2 84E2      		ldi r24,lo8(36)
+ 632 00e4 F801      		movw r30,r16
+ 633 00e6 6689      		ldd r22,Z+22
+ 634 00e8 0E94 0000 		call set_register
+ 635               	.LSM109:
+ 636 00ec 85E2      		ldi r24,lo8(37)
+ 637 00ee F801      		movw r30,r16
+ 638 00f0 6789      		ldd r22,Z+23
+ 639 00f2 0E94 0000 		call set_register
+ 640               	.LSM110:
+ 641 00f6 86E2      		ldi r24,lo8(38)
+ 642 00f8 F801      		movw r30,r16
+ 643 00fa 608D      		ldd r22,Z+24
+ 644 00fc 0E94 0000 		call set_register
+ 645               	.LSM111:
+ 646 0100 89E2      		ldi r24,lo8(41)
+ 647 0102 F801      		movw r30,r16
+ 648 0104 618D      		ldd r22,Z+25
+ 649 0106 0E94 0000 		call set_register
+ 650               	.LSM112:
+ 651 010a 8AE2      		ldi r24,lo8(42)
+ 652 010c F801      		movw r30,r16
+ 653 010e 628D      		ldd r22,Z+26
+ 654 0110 0E94 0000 		call set_register
+ 655               	.LSM113:
+ 656 0114 8CE2      		ldi r24,lo8(44)
+ 657 0116 F801      		movw r30,r16
+ 658 0118 638D      		ldd r22,Z+27
+ 659 011a 0E94 0000 		call set_register
+ 660               	/* epilogue start */
+ 661               	.LSM114:
+ 662 011e 1F91      		pop r17
+ 663 0120 0F91      		pop r16
+ 664               	.LVL26:
+ 665 0122 0895      		ret
+ 666               	.LFE32:
+ 668               		.section	.text.main,"ax",@progbits
+ 669               	.global	main
+ 671               	main:
+ 672               	.LFB33:
+ 673               	.LSM115:
+ 674 0000 CF93      		push r28
+ 675 0002 DF93      		push r29
+ 676               	/* prologue: function */
+ 677               	/* frame size = 0 */
+ 678               	.LSM116:
+ 679 0004 80E8      		ldi r24,lo8(-128)
+ 680 0006 8093 6100 		sts 97,r24
+ 681 000a 1092 6100 		sts 97,__zero_reg__
+ 682               	.LSM117:
+ 683 000e 80E0      		ldi r24,lo8(0)
+ 684 0010 0E94 0000 		call setup_spi
+ 685               	.LBB98:
+ 686               	.LBB99:
+ 687               	.LSM118:
+ 688 0014 8CB5      		in r24,76-32
+ 689 0016 8064      		ori r24,lo8(64)
+ 690 0018 8CBD      		out 76-32,r24
+ 691               	.LBE99:
+ 692               	.LBE98:
+ 693               	.LBB100:
+ 694               	.LBB101:
+ 695               	.LSM119:
+ 696 001a 2FB7      		in r18,__SREG__
+ 697               	.LVL27:
+ 698               	.LSM120:
+ 699               	/* #APP */
+ 700               	 ;  18 "./RingBuffer.h" 1
+ 701 001c F894      		cli
+ 702               	 ;  0 "" 2
+ 703               	.LSM121:
+ 704               	/* #NOAPP */
+ 705 001e 80E0      		ldi r24,lo8(tx_buffer_data)
+ 706 0020 90E0      		ldi r25,hi8(tx_buffer_data)
+ 707 0022 9093 0000 		sts (tx_buffer)+1,r25
+ 708 0026 8093 0000 		sts tx_buffer,r24
+ 709               	.LSM122:
+ 710 002a 9093 0000 		sts (tx_buffer+2)+1,r25
+ 711 002e 8093 0000 		sts tx_buffer+2,r24
+ 712               	.LSM123:
+ 713 0032 9093 0000 		sts (tx_buffer+4)+1,r25
+ 714 0036 8093 0000 		sts tx_buffer+4,r24
+ 715               	.LSM124:
+ 716 003a 8096      		adiw r24,32
+ 717 003c 9093 0000 		sts (tx_buffer+6)+1,r25
+ 718 0040 8093 0000 		sts tx_buffer+6,r24
+ 719               	.LSM125:
+ 720 0044 80E2      		ldi r24,lo8(32)
+ 721 0046 8093 0000 		sts tx_buffer+8,r24
+ 722               	.LSM126:
+ 723 004a 1092 0000 		sts tx_buffer+9,__zero_reg__
+ 724               	.LSM127:
+ 725 004e 2FBF      		out __SREG__,r18
+ 726               	.LBE101:
+ 727               	.LBE100:
+ 728               	.LSM128:
+ 729 0050 0E94 0000 		call send_command_sres
+ 730               	.LVL28:
+ 731               	.LSM129:
+ 732 0054 80E0      		ldi r24,lo8(regSettings)
+ 733 0056 90E0      		ldi r25,hi8(regSettings)
+ 734 0058 0E94 0000 		call write_settings
+ 735               	.LSM130:
+ 736 005c 8EE7      		ldi r24,lo8(126)
+ 737 005e 60E0      		ldi r22,lo8(paTable)
+ 738 0060 70E0      		ldi r23,hi8(paTable)
+ 739 0062 48E0      		ldi r20,lo8(8)
+ 740 0064 0E94 0000 		call set_register_burst
+ 741               	.LBB102:
+ 742               	.LBB103:
+ 743               	.LBB104:
+ 744               	.LBB105:
+ 745               	.LSM131:
+ 746 0068 C0E9      		ldi r28,lo8(400)
+ 747 006a D1E0      		ldi r29,hi8(400)
+ 748               	.LVL29:
+ 749               	.L49:
+ 750               	.LBE105:
+ 751               	.LBE104:
+ 752               	.LBE103:
+ 753               	.LBE102:
+ 754               	.LSM132:
+ 755 006c 85E3      		ldi r24,lo8(53)
+ 756               	.LVL30:
+ 757 006e 0E94 0000 		call send_command
+ 758               	.LVL31:
+ 759               	.LSM133:
+ 760 0072 0E94 0000 		call enable_pcint
+ 761 0076 40E0      		ldi r20,lo8(0)
+ 762 0078 50E0      		ldi r21,hi8(0)
+ 763               	.LVL32:
+ 764 007a 00C0      		rjmp .L42
+ 765               	.LVL33:
+ 766               	.L44:
+ 767               	.LBB109:
+ 768               	.LBB110:
+ 769               	.LBB111:
+ 770               	.LBB112:
+ 771               	.LSM134:
+ 772 007c E091 0000 		lds r30,tx_buffer
+ 773 0080 F091 0000 		lds r31,(tx_buffer)+1
+ 774 0084 8C91      		ld r24,X
+ 775 0086 8083      		st Z,r24
+ 776               	.LSM135:
+ 777 0088 8091 0000 		lds r24,tx_buffer
+ 778 008c 9091 0000 		lds r25,(tx_buffer)+1
+ 779 0090 0196      		adiw r24,1
+ 780 0092 9093 0000 		sts (tx_buffer)+1,r25
+ 781 0096 8093 0000 		sts tx_buffer,r24
+ 782 009a 2091 0000 		lds r18,tx_buffer+6
+ 783 009e 3091 0000 		lds r19,(tx_buffer+6)+1
+ 784 00a2 8217      		cp r24,r18
+ 785 00a4 9307      		cpc r25,r19
+ 786 00a6 01F4      		brne .L43
+ 787               	.LSM136:
+ 788 00a8 8091 0000 		lds r24,tx_buffer+4
+ 789 00ac 9091 0000 		lds r25,(tx_buffer+4)+1
+ 790 00b0 9093 0000 		sts (tx_buffer)+1,r25
+ 791 00b4 8093 0000 		sts tx_buffer,r24
+ 792               	.L43:
+ 793               	.LSM137:
+ 794 00b8 9FB7      		in r25,__SREG__
+ 795               	.LSM138:
+ 796               	/* #APP */
+ 797               	 ;  66 "./RingBuffer.h" 1
+ 798 00ba F894      		cli
+ 799               	 ;  0 "" 2
+ 800               	.LSM139:
+ 801               	/* #NOAPP */
+ 802 00bc 8091 0000 		lds r24,tx_buffer+9
+ 803 00c0 8F5F      		subi r24,lo8(-(1))
+ 804 00c2 8093 0000 		sts tx_buffer+9,r24
+ 805               	.LSM140:
+ 806 00c6 9FBF      		out __SREG__,r25
+ 807 00c8 1196      		adiw r26,1
+ 808               	.L47:
+ 809               	.LBE112:
+ 810               	.LBE111:
+ 811               	.LSM141:
+ 812 00ca 80E0      		ldi r24,hi8(signature+18)
+ 813 00cc A030      		cpi r26,lo8(signature+18)
+ 814 00ce B807      		cpc r27,r24
+ 815 00d0 01F4      		brne .L44
+ 816               	.LBE110:
+ 817               	.LSM142:
+ 818 00d2 1092 0000 		sts clear_to_send,__zero_reg__
+ 819               	.L45:
+ 820               	.LSM143:
+ 821 00d6 8091 0000 		lds r24,clear_to_send
+ 822 00da 8823      		tst r24
+ 823 00dc 01F0      		breq .L45
+ 824               	.LSM144:
+ 825 00de 4F5F      		subi r20,lo8(-(1))
+ 826 00e0 5F4F      		sbci r21,hi8(-(1))
+ 827 00e2 4233      		cpi r20,50
+ 828 00e4 5105      		cpc r21,__zero_reg__
+ 829 00e6 01F0      		breq .L46
+ 830               	.L42:
+ 831 00e8 A0E0      		ldi r26,lo8(signature)
+ 832 00ea B0E0      		ldi r27,hi8(signature)
+ 833 00ec 00C0      		rjmp .L47
+ 834               	.L46:
+ 835               	.LBE109:
+ 836               	.LSM145:
+ 837 00ee 0E94 0000 		call disable_pcint
+ 838               	.LVL34:
+ 839               	.LSM146:
+ 840 00f2 86E3      		ldi r24,lo8(54)
+ 841 00f4 0E94 0000 		call send_command
+ 842 00f8 80E5      		ldi r24,lo8(-15536)
+ 843 00fa 93EC      		ldi r25,hi8(-15536)
+ 844               	.LVL35:
+ 845               	.L48:
+ 846               	.LBB113:
+ 847               	.LBB108:
+ 848               	.LBB107:
+ 849               	.LBB106:
+ 850               	.LSM147:
+ 851 00fc FE01      		movw r30,r28
+ 852               	.LVL36:
+ 853               	/* #APP */
+ 854               	 ;  105 "c:/winavr-20100110/lib/gcc/../../avr/include/util/delay_basic.h" 1
+ 855 00fe 3197      		1: sbiw r30,1
+ 856 0100 01F4      		brne 1b
+ 857               	 ;  0 "" 2
+ 858               	/* #NOAPP */
+ 859               	.LBE106:
+ 860               	.LBE107:
+ 861               	.LSM148:
+ 862 0102 0197      		sbiw r24,1
+ 863               	.LSM149:
+ 864 0104 01F4      		brne .L48
+ 865 0106 00C0      		rjmp .L49
+ 866               	.LBE108:
+ 867               	.LBE113:
+ 868               	.LFE33:
+ 870               	.global	regSettings
+ 871               		.data
+ 874               	regSettings:
+ 875 0000 0B        		.byte	11
+ 876 0001 0C        		.byte	12
+ 877 0002 07        		.byte	7
+ 878 0003 D3        		.byte	-45
+ 879 0004 91        		.byte	-111
+ 880 0005 FF        		.byte	-1
+ 881 0006 12        		.byte	18
+ 882 0007 00        		.byte	0
+ 883 0008 00        		.byte	0
+ 884 0009 21        		.byte	33
+ 885 000a 65        		.byte	101
+ 886 000b 6A        		.byte	106
+ 887 000c 87        		.byte	-121
+ 888 000d F8        		.byte	-8
+ 889 000e 00        		.byte	0
+ 890 000f 22        		.byte	34
+ 891 0010 F8        		.byte	-8
+ 892 0011 50        		.byte	80
+ 893 0012 30        		.byte	48
+ 894 0013 18        		.byte	24
+ 895 0014 15        		.byte	21
+ 896 0015 E9        		.byte	-23
+ 897 0016 2A        		.byte	42
+ 898 0017 00        		.byte	0
+ 899 0018 1F        		.byte	31
+ 900 0019 59        		.byte	89
+ 901 001a 35        		.byte	53
+ 902 001b 09        		.byte	9
+ 903               	.global	paTable
+ 906               	paTable:
+ 907 001c 01        		.byte	1
+ 908 001d 0B        		.byte	11
+ 909 001e 25        		.byte	37
+ 910 001f 68        		.byte	104
+ 911 0020 60        		.byte	96
+ 912 0021 86        		.byte	-122
+ 913 0022 CC        		.byte	-52
+ 914 0023 C3        		.byte	-61
+ 915               	.global	signature
+ 918               	signature:
+ 919 0024 E2        		.byte	-30
+ 920 0025 4D        		.byte	77
+ 921 0026 A4        		.byte	-92
+ 922 0027 9B        		.byte	-101
+ 923 0028 69        		.byte	105
+ 924 0029 B6        		.byte	-74
+ 925 002a DA        		.byte	-38
+ 926 002b 6D        		.byte	109
+ 927 002c 24        		.byte	36
+ 928 002d 92        		.byte	-110
+ 929 002e 69        		.byte	105
+ 930 002f 24        		.byte	36
+ 931 0030 92        		.byte	-110
+ 932 0031 49        		.byte	73
+ 933 0032 24        		.byte	36
+ 934 0033 92        		.byte	-110
+ 935 0034 49        		.byte	73
+ 936 0035 A4        		.byte	-92
+ 937               	.global	clear_to_send
+ 940               	clear_to_send:
+ 941 0036 01        		.byte	1
+ 942               		.lcomm byte.1424,1
+ 945               	bit.1423:
+ 946 0037 80        		.byte	-128
+ 947               		.comm tx_buffer,10,1
+ 948               		.comm tx_buffer_data,32,1
+ 1045               	.Letext0:
 DEFINED SYMBOLS
                             *ABS*:00000000 CC1150_Response.c
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:2      *ABS*:0000003f __SREG__
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:3      *ABS*:0000003e __SP_H__
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:4      *ABS*:0000003d __SP_L__
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:5      *ABS*:00000034 __CCP__
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:6      *ABS*:00000000 __tmp_reg__
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:7      *ABS*:00000001 __zero_reg__
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:19     .text.setup_spi:00000000 setup_spi
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:60     .text.setup_pcint:00000000 setup_pcint
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:91     .text.__vector_9:00000000 __vector_9
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:1014   .data:00000037 clear_to_send
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:1019   .data:00000038 bit.1409
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:2      *ABS*:0000003f __SREG__
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:3      *ABS*:0000003e __SP_H__
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:4      *ABS*:0000003d __SP_L__
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:5      *ABS*:00000034 __CCP__
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:19     .text.setup_spi:00000000 setup_spi
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:60     .text.enable_pcint:00000000 enable_pcint
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:97     .text.disable_pcint:00000000 disable_pcint
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:134    .text.__vector_9:00000000 __vector_9
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:940    .data:00000036 clear_to_send
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:945    .data:00000037 bit.1423
                             *COM*:0000000a tx_buffer
-                             .bss:00000000 byte.1410
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:273    .text.enable_spi:00000000 enable_spi
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:290    .text.disable_spi:00000000 disable_spi
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:307    .text.send_spi:00000000 send_spi
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:331    .text.select:00000000 select
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:346    .text.deselect:00000000 deselect
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:361    .text.send_command:00000000 send_command
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:401    .text.send_command_sres:00000000 send_command_sres
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:444    .text.set_register:00000000 set_register
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:497    .text.set_register_burst:00000000 set_register_burst
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:564    .text.write_settings:00000000 write_settings
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:725    .text.main:00000000 main
+                             .bss:00000000 byte.1424
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:307    .text.send_command:00000000 send_command
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:347    .text.send_command_sres:00000000 send_command_sres
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:390    .text.set_register:00000000 set_register
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:443    .text.set_register_burst:00000000 set_register_burst
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:510    .text.write_settings:00000000 write_settings
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:671    .text.main:00000000 main
                             *COM*:00000020 tx_buffer_data
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:943    .data:00000000 regSettings
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:975    .data:0000001c paTable
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:987    .data:00000024 signature
-C:\Users\Andrew\AppData\Local\Temp/cc5xKqb8.s:1009   .data:00000036 sig_length
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:874    .data:00000000 regSettings
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:906    .data:0000001c paTable
+C:\Users\Andrew\AppData\Local\Temp/ccC7BQLT.s:918    .data:00000024 signature
 
 UNDEFINED SYMBOLS
 __do_copy_data

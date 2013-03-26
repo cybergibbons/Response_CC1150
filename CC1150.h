@@ -1,3 +1,6 @@
+// General defines and helper macros for CC1150
+// Combination of several sources.
+
 // To set the speed of the processor
 #define CPU_PRESCALE(n) (CLKPR = 0x80, CLKPR = (n))
 #define CPU_16MHz       0x00
@@ -10,19 +13,7 @@
 #define CPU_125kHz      0x07
 #define CPU_62kHz       0x08
 
-// CSen on the CC1150 is connected to PB0, pin 53
-#define SELECT_CC1150 PORTB &= ~(1<<PORTB0)
-#define DESELECT_CC1150 PORTB |= (1<<PORTB0)
-#define SETUP_CS_CC1150 DDRB |= (1<<PORTB7)
-
-#define SPI_SS_PIN PORTB0
-#define SPI_SCK_PIN PORTB1
-#define SPI_MOSI_PIN PORTB2
-#define SPI_MISO_PIN PORTB3
-
-// Arbitary delay in us as CC1150 seems to not respond
-#define SPI_DELAY 1
-
+// SPI defines
 #define SPI_MODE_0 0x00 
 #define SPI_MODE_1 0x01 
 #define SPI_MODE_2 0x02 
@@ -36,8 +27,8 @@
 #define SPI_MSTR_CLK64 0x02 // 250kHz 
 #define SPI_MSTR_CLK128 0x03 // 125kHz
 #define SPI_MSTR_CLK2 0x04 // 8MHz
-#define SPI_MSTR_CLK8 0x05 // 2Mhz
-#define SPI_MSTR_CLK32 0x06 // 500Mhz
+#define SPI_MSTR_CLK8 0x05 // 2MHz
+#define SPI_MSTR_CLK32 0x06 // 500kHz
 
 // Control
 #define CC1150_IOCFG2       0x00        // GDO2 output pin configuration
@@ -128,6 +119,7 @@
 #define CC1150_RCCTRL0_STATUS   0x3D
 #define CC1150_PATABLE          0x3E
 
+// Structure defining all of the settings
 typedef struct {
 uint8_t IOCFG1;
 uint8_t IOCFG0; 

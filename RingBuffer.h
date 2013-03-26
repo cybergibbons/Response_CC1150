@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// Ripped from LUFA
+// http://fourwalledcubicle.com/files/LUFA/Doc/130303/html/struct_ring_buffer__t.html
 typedef struct
 {
 	uint8_t* In; /**< Current storage location in the circular buffer. */

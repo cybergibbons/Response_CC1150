@@ -1,11 +1,17 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-#include <CC1150_Response.h>
+#include <CC1150.h>
 #include <RingBuffer.h>
 
+// Pins used by the CC1150 board
+#define SPI_SS_PIN PORTB0
+#define SPI_SCK_PIN PORTB1
+#define SPI_MOSI_PIN PORTB2
+#define SPI_MISO_PIN PORTB3
+#define GDO0 PORTL0
+
 // Copied from logic trace of CC1150 from door contact
-// Currently not stored in PROGMEM as may modify
 REGSETTINGS regSettings = {
 	0x0B, // IOCFG1
 	0x0C, // IOCFG0	
@@ -50,6 +56,7 @@ uint8_t paTable[] = {
 };
 
 // This holds the raw signal clocked out
+// From logic trace and Python parser
 uint8_t signature[] = {
 	0xe2,
 	0x4d,
@@ -71,7 +78,6 @@ uint8_t signature[] = {
 	0xa4
 };
 
-const uint8_t sig_length = 18;
 volatile uint8_t clear_to_send = 1;
 RingBuffer_t tx_buffer;
 uint8_t tx_buffer_data[32];
@@ -81,8 +87,8 @@ void setup_spi(uint8_t clock) {
 	// configure the DDR for the pins.
 	DDRB |= (1<<SPI_MOSI_PIN); // output
    	DDRB &= ~(1<<SPI_MISO_PIN); // input
-    	DDRB |= (1<<SPI_SCK_PIN);// output
-    	DDRB |= (1<<SPI_SS_PIN);//output
+    DDRB |= (1<<SPI_SCK_PIN);// output
+    DDRB |= (1<<SPI_SS_PIN);//output
 	
 	// configure SPI control register
 	SPCR = (0 << SPIE) // no interrupt please
@@ -97,84 +103,107 @@ void setup_spi(uint8_t clock) {
 	SPSR = (clock & 0x04) << SPI2X;
 }
 
-void setup_pcint(void) {
-	// SPI_MISO_PIN receives a synchronous clock
-	// Setup PCINT3 interrupt
-	PCICR |= (1 << PCIE0);
-	PCMSK0 |= (1 << PCINT3);
+void enable_pcint(void) {
+	// This is the data out
+	DDRL |= (1<<GDO0); // output
 	
+	// SPI_MISO_PIN receives a synchronous clock
+	// PB3 is the pin used 
+	PCICR |= (1 << PCIE0); // Enable PCINT[7:0]
+	PCMSK0 |= (1 << PCINT3); // enable mask for PCINT3
+	
+	// enable interrupts
 	sei();
 }
 
-ISR(PCINT0_vect) {
-	static uint8_t bit = 0x80;
-	static uint8_t byte = 0;
+void disable_pcint(void) {
+	DDRL &= ~(1<<GDO0); // input
 	
-	PORTL |= (1 << PORTL1);
+	PCICR &= ~(1 << PCIE0);
+	PCMSK0 &= ~(1 << PCINT3);
+	
+	// disable interrupts
+	cli();
+}
+
+// Interrupt handler for pin change interrupt.
+// This clocks the ring buffer out on the L0 pin
+ISR(PCINT0_vect) {
+	static uint8_t bit = 0x80; // Which bit are we clocking out
+	static uint8_t byte = 0; // Current byte we are clocking out
+	
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
+	// MISO has the clock signal
 	if (clear_to_send == 0 && (PINB & (1 << SPI_MISO_PIN))) {
 		
+		// We are starting a new byte
 		if (bit == 0x80 && !RingBuffer_IsEmpty(&tx_buffer)) {
 			byte = RingBuffer_Remove(&tx_buffer);
 		}
 		
 		if (byte & bit) {
-			PORTL |= (1 << PORTL0);
+			PORTL |= (1 << GDO0);
 		} else {
-			PORTL &= ~(1 << PORTL0);
+			PORTL &= ~(1 << GDO0);
 		}
 		
 		bit >>= 1;
 		
-		if (bit == 0) {
+		// We have reached the end of the byte
+		if (bit == 0x00) {
 			bit = 0x80;
-		}
-		
-		if (RingBuffer_IsEmpty(&tx_buffer)) {
+			
+			if (RingBuffer_IsEmpty(&tx_buffer)) {
 				clear_to_send = 1;
+			}	
 		}	
 	}
-	PORTL &= ~(1 << PORTL1);
+	
+	
 }
 
-void enable_spi(void) {
+// SPI helper functions
+inline void enable_spi(void) {
 	SPCR |= (1 << SPE);
 }
 
-void disable_spi(void) {
+inline void disable_spi(void) {
 	SPCR &= ~(1 << SPE);
 }
 
-uint8_t send_spi(uint8_t byte) {
+inline void select(void) {
+	PORTB &= ~(1 << SPI_SS_PIN);
+}
+
+inline void deselect(void) {
+	PORTB |= (1 << SPI_SS_PIN);
+}
+
+// yes, SPI is this easy on AVR
+inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
 	while (!(SPSR & (1<<SPIF)));
 	return SPDR;
 }
 
-void select(void) {
-	PORTB &= ~(1 << SPI_SS_PIN);
-}
-
-void deselect(void) {
-	PORTB |= (1 << SPI_SS_PIN);
-}
-
+// Send a strobe command
 void send_command(uint8_t command) {
 	select();
 	send_spi(command);
 	deselect();
 }
 
+// Keeps CC1150 selected and waits for MISO to go low
+// as per p21 of datasheet
 void send_command_sres() {
-	// Keeps CC1150 selected and waits for MISO to go low
-	// as per p21 of datasheet
 	select();
 	send_spi(CC1150_SRES);
 	while(PINB & (1 << SPI_MISO_PIN));
 	deselect();
 }
 
+// Set an individual register. Ignore returned SPI data - we don't care!
 void set_register(uint8_t address, uint8_t data) {
 	select();
 	send_spi(address);
@@ -182,6 +211,7 @@ void set_register(uint8_t address, uint8_t data) {
 	deselect();
 }
 
+// Used for setting the PA table - this is the only way to do this.
 void set_register_burst(uint8_t address, uint8_t *data, uint8_t length) {
 	uint8_t i;
 	
@@ -226,43 +256,43 @@ void write_settings(REGSETTINGS *pRegSettings) {
 }
 
 int main(void) {
-	CPU_PRESCALE(0);
-	
-	DDRL |= (1<<PORTL0);
-	DDRL |= (1<<PORTL1);
+	CPU_PRESCALE(CPU_16MHz);
 	
 	// Door contact runs very slowly
 	// But CC1150 supports 4MHz
-	
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
-	setup_pcint();
 	
 	RingBuffer_InitBuffer(&tx_buffer, tx_buffer_data, sizeof(tx_buffer_data));
 
+	// Reset and then set registers and PA table
 	send_command_sres();
-		
 	write_settings(&regSettings);
+	// PATABLE is at 0x3E for read, and 0x7E for write.
 	set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
-	
-	
-	
-	// Currently do nothing 
-	while(1) {
-		for (int i = 0; i < sig_length; i++) {
-			RingBuffer_Insert(&tx_buffer, signature[i]);
-		}
-		
-		send_command(CC1150_STX);
-		clear_to_send = 0;
-		
-		while(clear_to_send == 0);
-		
-		send_command(CC1150_SFSTXON);
-		_delay_ms(1000);
-	}
-	
-	
-	
 
+	// Send door signal 50 times
+	while(1) {
+		send_command(CC1150_STX);
+		
+		enable_pcint();
+		
+		for (int j = 0; j < 50; j++) {
+			for (int i = 0; i < sizeof(signature); i++) {
+				RingBuffer_Insert(&tx_buffer, signature[i]);
+			}
+			
+			// Allow interrupt handler to send data
+			clear_to_send = 0;
+			
+			// Churn until interrupt handler is done
+			while(clear_to_send == 0);
+		}
+	
+		disable_pcint();
+		
+		send_command(CC1150_SIDLE);
+		
+		_delay_ms(5000);
+	}
 }
