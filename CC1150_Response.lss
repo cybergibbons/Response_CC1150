@@ -3,29 +3,29 @@ CC1150_Response.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000038  00800200  000004b6  0000054a  2**0
+  0 .data         0000003a  00800200  000004c4  00000558  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000004b6  00000000  00000000  00000094  2**1
+  1 .text         000004c4  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          0000002b  00800238  00800238  00000582  2**0
+  2 .bss          0000002b  0080023a  0080023a  00000592  2**0
                   ALLOC
-  3 .debug_aranges 00000068  00000000  00000000  00000582  2**0
+  3 .debug_aranges 00000068  00000000  00000000  00000592  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .debug_pubnames 0000011a  00000000  00000000  000005ea  2**0
+  4 .debug_pubnames 0000011a  00000000  00000000  000005fa  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00000915  00000000  00000000  00000704  2**0
+  5 .debug_info   00000916  00000000  00000000  00000714  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000271  00000000  00000000  00001019  2**0
+  6 .debug_abbrev 00000271  00000000  00000000  0000102a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000065b  00000000  00000000  0000128a  2**0
+  7 .debug_line   00000675  00000000  00000000  0000129b  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000000b0  00000000  00000000  000018e8  2**2
+  8 .debug_frame  000000b0  00000000  00000000  00001910  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000336  00000000  00000000  00001998  2**0
+  9 .debug_str    00000336  00000000  00000000  000019c0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000001a4  00000000  00000000  00001cce  2**0
+ 10 .debug_loc    000001a4  00000000  00000000  00001cf6  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 000000a8  00000000  00000000  00001e72  2**0
+ 11 .debug_ranges 000000a8  00000000  00000000  00001e9a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -158,20 +158,20 @@ Disassembly of section .text:
   f0:	12 e0       	ldi	r17, 0x02	; 2
   f2:	a0 e0       	ldi	r26, 0x00	; 0
   f4:	b2 e0       	ldi	r27, 0x02	; 2
-  f6:	e6 eb       	ldi	r30, 0xB6	; 182
+  f6:	e4 ec       	ldi	r30, 0xC4	; 196
   f8:	f4 e0       	ldi	r31, 0x04	; 4
   fa:	00 e0       	ldi	r16, 0x00	; 0
   fc:	0b bf       	out	0x3b, r16	; 59
   fe:	02 c0       	rjmp	.+4      	; 0x104 <__do_copy_data+0x14>
  100:	07 90       	elpm	r0, Z+
  102:	0d 92       	st	X+, r0
- 104:	a8 33       	cpi	r26, 0x38	; 56
+ 104:	aa 33       	cpi	r26, 0x3A	; 58
  106:	b1 07       	cpc	r27, r17
  108:	d9 f7       	brne	.-10     	; 0x100 <__do_copy_data+0x10>
 
 0000010a <__do_clear_bss>:
  10a:	12 e0       	ldi	r17, 0x02	; 2
- 10c:	a8 e3       	ldi	r26, 0x38	; 56
+ 10c:	aa e3       	ldi	r26, 0x3A	; 58
  10e:	b2 e0       	ldi	r27, 0x02	; 2
  110:	01 c0       	rjmp	.+2      	; 0x114 <.do_clear_bss_start>
 
@@ -179,11 +179,11 @@ Disassembly of section .text:
  112:	1d 92       	st	X+, r1
 
 00000114 <.do_clear_bss_start>:
- 114:	a3 36       	cpi	r26, 0x63	; 99
+ 114:	a5 36       	cpi	r26, 0x65	; 101
  116:	b1 07       	cpc	r27, r17
  118:	e1 f7       	brne	.-8      	; 0x112 <.do_clear_bss_loop>
- 11a:	4f d1       	rcall	.+670    	; 0x3ba <main>
- 11c:	ca c1       	rjmp	.+916    	; 0x4b2 <_exit>
+ 11a:	56 d1       	rcall	.+684    	; 0x3c8 <main>
+ 11c:	d1 c1       	rjmp	.+930    	; 0x4c0 <_exit>
 
 0000011e <__bad_interrupt>:
  11e:	70 cf       	rjmp	.-288    	; 0x0 <__vectors>
@@ -230,9 +230,8 @@ void setup_spi(uint8_t clock) {
 00000144 <enable_pcint>:
 
 void enable_pcint(void) {
-	
 	// This is the data out
-	DDRL |= (1<<GDO0);
+	DDRL |= (1<<GDO0); // output
  144:	ea e0       	ldi	r30, 0x0A	; 10
  146:	f1 e0       	ldi	r31, 0x01	; 1
  148:	80 81       	ld	r24, Z
@@ -254,6 +253,7 @@ void enable_pcint(void) {
  15e:	88 60       	ori	r24, 0x08	; 8
  160:	80 83       	st	Z, r24
 	
+	// enable interrupts
 	sei();
  162:	78 94       	sei
 }
@@ -262,8 +262,7 @@ void enable_pcint(void) {
 00000166 <disable_pcint>:
 
 void disable_pcint(void) {
-
-	DDRL &= ~(1<<GDO0);
+	DDRL &= ~(1<<GDO0); // input
  166:	ea e0       	ldi	r30, 0x0A	; 10
  168:	f1 e0       	ldi	r31, 0x01	; 1
  16a:	80 81       	ld	r24, Z
@@ -283,6 +282,7 @@ void disable_pcint(void) {
  180:	87 7f       	andi	r24, 0xF7	; 247
  182:	80 83       	st	Z, r24
 	
+	// disable interrupts
 	cli();
  184:	f8 94       	cli
 }
@@ -292,6 +292,7 @@ void disable_pcint(void) {
 
 // Interrupt handler for pin change interrupt.
 // This clocks the ring buffer out on the L0 pin
+// in responses to changes B3
 ISR(PCINT0_vect) {
  188:	1f 92       	push	r1
  18a:	0f 92       	push	r0
@@ -307,21 +308,22 @@ ISR(PCINT0_vect) {
  19e:	9f 93       	push	r25
  1a0:	ef 93       	push	r30
  1a2:	ff 93       	push	r31
-	static uint8_t bit = 0x80;
-	static uint8_t byte = 0;
+	static uint8_t byte = 0; // Current byte we are clocking out
 	
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
+	// MISO has the clock signal
 	if (clear_to_send == 0 && (PINB & (1 << SPI_MISO_PIN))) {
- 1a4:	80 91 36 02 	lds	r24, 0x0236
+ 1a4:	80 91 37 02 	lds	r24, 0x0237
  1a8:	88 23       	and	r24, r24
  1aa:	09 f0       	breq	.+2      	; 0x1ae <__vector_9+0x26>
- 1ac:	4d c0       	rjmp	.+154    	; 0x248 <__vector_9+0xc0>
+ 1ac:	54 c0       	rjmp	.+168    	; 0x256 <__vector_9+0xce>
  1ae:	1b 9b       	sbis	0x03, 3	; 3
- 1b0:	4b c0       	rjmp	.+150    	; 0x248 <__vector_9+0xc0>
+ 1b0:	52 c0       	rjmp	.+164    	; 0x256 <__vector_9+0xce>
 		
+		// We are starting a new byte
 		if (bit == 0x80 && !RingBuffer_IsEmpty(&tx_buffer)) {
- 1b2:	30 91 37 02 	lds	r19, 0x0237
+ 1b2:	30 91 38 02 	lds	r19, 0x0238
  1b6:	30 38       	cpi	r19, 0x80	; 128
  1b8:	39 f5       	brne	.+78     	; 0x208 <__vector_9+0x80>
 
@@ -335,7 +337,7 @@ static inline uint16_t RingBuffer_GetCount(RingBuffer_t* const Buffer)
  1bc:	f8 94       	cli
 
 	Count = Buffer->Count;
- 1be:	20 91 62 02 	lds	r18, 0x0262
+ 1be:	20 91 64 02 	lds	r18, 0x0264
 
 	SREG = CurrentGlobalInt;
  1c2:	8f bf       	out	0x3f, r24	; 63
@@ -347,23 +349,23 @@ static inline uint16_t RingBuffer_GetCount(RingBuffer_t* const Buffer)
 static inline uint8_t RingBuffer_Remove(RingBuffer_t* Buffer)
 {
 	uint8_t Data = *Buffer->Out;
- 1c8:	e0 91 5b 02 	lds	r30, 0x025B
- 1cc:	f0 91 5c 02 	lds	r31, 0x025C
+ 1c8:	e0 91 5d 02 	lds	r30, 0x025D
+ 1cc:	f0 91 5e 02 	lds	r31, 0x025E
  1d0:	41 91       	ld	r20, Z+
 
 	if (++Buffer->Out == Buffer->End)
- 1d2:	f0 93 5c 02 	sts	0x025C, r31
- 1d6:	e0 93 5b 02 	sts	0x025B, r30
- 1da:	80 91 5f 02 	lds	r24, 0x025F
- 1de:	90 91 60 02 	lds	r25, 0x0260
+ 1d2:	f0 93 5e 02 	sts	0x025E, r31
+ 1d6:	e0 93 5d 02 	sts	0x025D, r30
+ 1da:	80 91 61 02 	lds	r24, 0x0261
+ 1de:	90 91 62 02 	lds	r25, 0x0262
  1e2:	e8 17       	cp	r30, r24
  1e4:	f9 07       	cpc	r31, r25
  1e6:	41 f4       	brne	.+16     	; 0x1f8 <__vector_9+0x70>
 	  Buffer->Out = Buffer->Start;
- 1e8:	80 91 5d 02 	lds	r24, 0x025D
- 1ec:	90 91 5e 02 	lds	r25, 0x025E
- 1f0:	90 93 5c 02 	sts	0x025C, r25
- 1f4:	80 93 5b 02 	sts	0x025B, r24
+ 1e8:	80 91 5f 02 	lds	r24, 0x025F
+ 1ec:	90 91 60 02 	lds	r25, 0x0260
+ 1f0:	90 93 5e 02 	sts	0x025E, r25
+ 1f4:	80 93 5d 02 	sts	0x025D, r24
 
 	uint8_t CurrentGlobalInt = SREG;
  1f8:	8f b7       	in	r24, 0x3f	; 63
@@ -372,16 +374,16 @@ static inline uint8_t RingBuffer_Remove(RingBuffer_t* Buffer)
 
 	Buffer->Count--;
  1fc:	21 50       	subi	r18, 0x01	; 1
- 1fe:	20 93 62 02 	sts	0x0262, r18
+ 1fe:	20 93 64 02 	sts	0x0264, r18
 
 	SREG = CurrentGlobalInt;
  202:	8f bf       	out	0x3f, r24	; 63
 			byte = RingBuffer_Remove(&tx_buffer);
- 204:	40 93 38 02 	sts	0x0238, r20
+ 204:	40 93 3a 02 	sts	0x023A, r20
 		}
 		
 		if (byte & bit) {
- 208:	80 91 38 02 	lds	r24, 0x0238
+ 208:	80 91 3a 02 	lds	r24, 0x023A
  20c:	83 23       	and	r24, r19
  20e:	21 f0       	breq	.+8      	; 0x218 <__vector_9+0x90>
 			PORTL |= (1 << GDO0);
@@ -398,14 +400,15 @@ static inline uint8_t RingBuffer_Remove(RingBuffer_t* Buffer)
 		bit >>= 1;
  222:	83 2f       	mov	r24, r19
  224:	86 95       	lsr	r24
- 226:	80 93 37 02 	sts	0x0237, r24
+ 226:	80 93 38 02 	sts	0x0238, r24
 		
+		// We have reached the end of the byte
 		if (bit == 0x00) {
  22a:	88 23       	and	r24, r24
- 22c:	69 f4       	brne	.+26     	; 0x248 <__vector_9+0xc0>
+ 22c:	19 f4       	brne	.+6      	; 0x234 <__vector_9+0xac>
 			bit = 0x80;
  22e:	80 e8       	ldi	r24, 0x80	; 128
- 230:	80 93 37 02 	sts	0x0237, r24
+ 230:	80 93 38 02 	sts	0x0238, r24
 
 static inline uint16_t RingBuffer_GetCount(RingBuffer_t* const Buffer)
 {
@@ -420,586 +423,595 @@ static inline uint16_t RingBuffer_GetCount(RingBuffer_t* const Buffer)
 
 	SREG = CurrentGlobalInt;
  238:	8f bf       	out	0x3f, r24	; 63
-			
-			if (RingBuffer_IsEmpty(&tx_buffer)) {
- 23a:	80 91 62 02 	lds	r24, 0x0262
+		}
+		
+		if (RingBuffer_IsEmpty(&tx_buffer)) {
+ 23a:	80 91 64 02 	lds	r24, 0x0264
  23e:	88 23       	and	r24, r24
- 240:	19 f4       	brne	.+6      	; 0x248 <__vector_9+0xc0>
+ 240:	51 f4       	brne	.+20     	; 0x256 <__vector_9+0xce>
+			if (bit == 0x02) {
+ 242:	80 91 38 02 	lds	r24, 0x0238
+ 246:	82 30       	cpi	r24, 0x02	; 2
+ 248:	31 f4       	brne	.+12     	; 0x256 <__vector_9+0xce>
 				clear_to_send = 1;
- 242:	81 e0       	ldi	r24, 0x01	; 1
- 244:	80 93 36 02 	sts	0x0236, r24
-			}	
-		}	
+ 24a:	81 e0       	ldi	r24, 0x01	; 1
+ 24c:	80 93 37 02 	sts	0x0237, r24
+				bit = 0x80;
+ 250:	80 e8       	ldi	r24, 0x80	; 128
+ 252:	80 93 38 02 	sts	0x0238, r24
+			}
+		}
 	}
 	
 	
 }
- 248:	ff 91       	pop	r31
- 24a:	ef 91       	pop	r30
- 24c:	9f 91       	pop	r25
- 24e:	8f 91       	pop	r24
- 250:	4f 91       	pop	r20
- 252:	3f 91       	pop	r19
- 254:	2f 91       	pop	r18
- 256:	0f 90       	pop	r0
- 258:	0b be       	out	0x3b, r0	; 59
- 25a:	0f 90       	pop	r0
- 25c:	0f be       	out	0x3f, r0	; 63
- 25e:	0f 90       	pop	r0
- 260:	1f 90       	pop	r1
- 262:	18 95       	reti
+ 256:	ff 91       	pop	r31
+ 258:	ef 91       	pop	r30
+ 25a:	9f 91       	pop	r25
+ 25c:	8f 91       	pop	r24
+ 25e:	4f 91       	pop	r20
+ 260:	3f 91       	pop	r19
+ 262:	2f 91       	pop	r18
+ 264:	0f 90       	pop	r0
+ 266:	0b be       	out	0x3b, r0	; 59
+ 268:	0f 90       	pop	r0
+ 26a:	0f be       	out	0x3f, r0	; 63
+ 26c:	0f 90       	pop	r0
+ 26e:	1f 90       	pop	r1
+ 270:	18 95       	reti
 
-00000264 <send_command>:
+00000272 <send_command>:
 inline void disable_spi(void) {
 	SPCR &= ~(1 << SPE);
 }
 
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
- 264:	28 98       	cbi	0x05, 0	; 5
-inline void deselect(void) {
+ 272:	28 98       	cbi	0x05, 0	; 5
 	PORTB |= (1 << SPI_SS_PIN);
 }
 
+// yes, SPI is this easy on AVR
 inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
- 266:	8e bd       	out	0x2e, r24	; 46
+ 274:	8e bd       	out	0x2e, r24	; 46
 	while (!(SPSR & (1<<SPIF)));
- 268:	0d b4       	in	r0, 0x2d	; 45
- 26a:	07 fe       	sbrs	r0, 7
- 26c:	fd cf       	rjmp	.-6      	; 0x268 <send_command+0x4>
+ 276:	0d b4       	in	r0, 0x2d	; 45
+ 278:	07 fe       	sbrs	r0, 7
+ 27a:	fd cf       	rjmp	.-6      	; 0x276 <send_command+0x4>
 	return SPDR;
- 26e:	8e b5       	in	r24, 0x2e	; 46
+ 27c:	8e b5       	in	r24, 0x2e	; 46
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
 }
 
 inline void deselect(void) {
 	PORTB |= (1 << SPI_SS_PIN);
- 270:	28 9a       	sbi	0x05, 0	; 5
+ 27e:	28 9a       	sbi	0x05, 0	; 5
 // Send a strobe command
 void send_command(uint8_t command) {
 	select();
 	send_spi(command);
 	deselect();
 }
- 272:	08 95       	ret
+ 280:	08 95       	ret
 
-00000274 <send_command_sres>:
+00000282 <send_command_sres>:
 inline void disable_spi(void) {
 	SPCR &= ~(1 << SPE);
 }
 
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
- 274:	28 98       	cbi	0x05, 0	; 5
-inline void deselect(void) {
+ 282:	28 98       	cbi	0x05, 0	; 5
 	PORTB |= (1 << SPI_SS_PIN);
 }
 
+// yes, SPI is this easy on AVR
 inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
- 276:	80 e3       	ldi	r24, 0x30	; 48
- 278:	8e bd       	out	0x2e, r24	; 46
+ 284:	80 e3       	ldi	r24, 0x30	; 48
+ 286:	8e bd       	out	0x2e, r24	; 46
 	while (!(SPSR & (1<<SPIF)));
- 27a:	0d b4       	in	r0, 0x2d	; 45
- 27c:	07 fe       	sbrs	r0, 7
- 27e:	fd cf       	rjmp	.-6      	; 0x27a <send_command_sres+0x6>
+ 288:	0d b4       	in	r0, 0x2d	; 45
+ 28a:	07 fe       	sbrs	r0, 7
+ 28c:	fd cf       	rjmp	.-6      	; 0x288 <send_command_sres+0x6>
 	return SPDR;
- 280:	8e b5       	in	r24, 0x2e	; 46
+ 28e:	8e b5       	in	r24, 0x2e	; 46
 // Keeps CC1150 selected and waits for MISO to go low
 // as per p21 of datasheet
 void send_command_sres() {
 	select();
 	send_spi(CC1150_SRES);
 	while(PINB & (1 << SPI_MISO_PIN));
- 282:	1b 99       	sbic	0x03, 3	; 3
- 284:	fe cf       	rjmp	.-4      	; 0x282 <send_command_sres+0xe>
+ 290:	1b 99       	sbic	0x03, 3	; 3
+ 292:	fe cf       	rjmp	.-4      	; 0x290 <send_command_sres+0xe>
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
 }
 
 inline void deselect(void) {
 	PORTB |= (1 << SPI_SS_PIN);
- 286:	28 9a       	sbi	0x05, 0	; 5
+ 294:	28 9a       	sbi	0x05, 0	; 5
 void send_command_sres() {
 	select();
 	send_spi(CC1150_SRES);
 	while(PINB & (1 << SPI_MISO_PIN));
 	deselect();
 }
- 288:	08 95       	ret
+ 296:	08 95       	ret
 
-0000028a <set_register>:
+00000298 <set_register>:
 inline void disable_spi(void) {
 	SPCR &= ~(1 << SPE);
 }
 
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
- 28a:	28 98       	cbi	0x05, 0	; 5
-inline void deselect(void) {
+ 298:	28 98       	cbi	0x05, 0	; 5
 	PORTB |= (1 << SPI_SS_PIN);
 }
 
+// yes, SPI is this easy on AVR
 inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
- 28c:	8e bd       	out	0x2e, r24	; 46
+ 29a:	8e bd       	out	0x2e, r24	; 46
 	while (!(SPSR & (1<<SPIF)));
- 28e:	0d b4       	in	r0, 0x2d	; 45
- 290:	07 fe       	sbrs	r0, 7
- 292:	fd cf       	rjmp	.-6      	; 0x28e <set_register+0x4>
+ 29c:	0d b4       	in	r0, 0x2d	; 45
+ 29e:	07 fe       	sbrs	r0, 7
+ 2a0:	fd cf       	rjmp	.-6      	; 0x29c <set_register+0x4>
 	return SPDR;
- 294:	8e b5       	in	r24, 0x2e	; 46
-inline void deselect(void) {
+ 2a2:	8e b5       	in	r24, 0x2e	; 46
 	PORTB |= (1 << SPI_SS_PIN);
 }
 
+// yes, SPI is this easy on AVR
 inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
- 296:	6e bd       	out	0x2e, r22	; 46
+ 2a4:	6e bd       	out	0x2e, r22	; 46
 	while (!(SPSR & (1<<SPIF)));
- 298:	0d b4       	in	r0, 0x2d	; 45
- 29a:	07 fe       	sbrs	r0, 7
- 29c:	fd cf       	rjmp	.-6      	; 0x298 <set_register+0xe>
+ 2a6:	0d b4       	in	r0, 0x2d	; 45
+ 2a8:	07 fe       	sbrs	r0, 7
+ 2aa:	fd cf       	rjmp	.-6      	; 0x2a6 <set_register+0xe>
 	return SPDR;
- 29e:	8e b5       	in	r24, 0x2e	; 46
+ 2ac:	8e b5       	in	r24, 0x2e	; 46
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
 }
 
 inline void deselect(void) {
 	PORTB |= (1 << SPI_SS_PIN);
- 2a0:	28 9a       	sbi	0x05, 0	; 5
+ 2ae:	28 9a       	sbi	0x05, 0	; 5
 void set_register(uint8_t address, uint8_t data) {
 	select();
 	send_spi(address);
 	send_spi(data);
 	deselect();
 }
- 2a2:	08 95       	ret
+ 2b0:	08 95       	ret
 
-000002a4 <set_register_burst>:
+000002b2 <set_register_burst>:
 inline void disable_spi(void) {
 	SPCR &= ~(1 << SPE);
 }
 
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
- 2a4:	28 98       	cbi	0x05, 0	; 5
-inline void deselect(void) {
+ 2b2:	28 98       	cbi	0x05, 0	; 5
 	PORTB |= (1 << SPI_SS_PIN);
 }
 
+// yes, SPI is this easy on AVR
 inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
- 2a6:	8e bd       	out	0x2e, r24	; 46
+ 2b4:	8e bd       	out	0x2e, r24	; 46
 	while (!(SPSR & (1<<SPIF)));
- 2a8:	0d b4       	in	r0, 0x2d	; 45
- 2aa:	07 fe       	sbrs	r0, 7
- 2ac:	fd cf       	rjmp	.-6      	; 0x2a8 <set_register_burst+0x4>
+ 2b6:	0d b4       	in	r0, 0x2d	; 45
+ 2b8:	07 fe       	sbrs	r0, 7
+ 2ba:	fd cf       	rjmp	.-6      	; 0x2b6 <set_register_burst+0x4>
 	return SPDR;
- 2ae:	8e b5       	in	r24, 0x2e	; 46
- 2b0:	fb 01       	movw	r30, r22
- 2b2:	90 e0       	ldi	r25, 0x00	; 0
- 2b4:	08 c0       	rjmp	.+16     	; 0x2c6 <set_register_burst+0x22>
+ 2bc:	8e b5       	in	r24, 0x2e	; 46
+ 2be:	fb 01       	movw	r30, r22
+ 2c0:	90 e0       	ldi	r25, 0x00	; 0
+ 2c2:	08 c0       	rjmp	.+16     	; 0x2d4 <set_register_burst+0x22>
 	
 	select();
 	send_spi(address);
 	
 	for (i = 0; i < length; i++) {
 		send_spi(data[i]);
- 2b6:	80 81       	ld	r24, Z
-inline void deselect(void) {
+ 2c4:	80 81       	ld	r24, Z
 	PORTB |= (1 << SPI_SS_PIN);
 }
 
+// yes, SPI is this easy on AVR
 inline uint8_t send_spi(uint8_t byte) {
 	SPDR = byte;
- 2b8:	8e bd       	out	0x2e, r24	; 46
+ 2c6:	8e bd       	out	0x2e, r24	; 46
 	while (!(SPSR & (1<<SPIF)));
- 2ba:	0d b4       	in	r0, 0x2d	; 45
- 2bc:	07 fe       	sbrs	r0, 7
- 2be:	fd cf       	rjmp	.-6      	; 0x2ba <set_register_burst+0x16>
+ 2c8:	0d b4       	in	r0, 0x2d	; 45
+ 2ca:	07 fe       	sbrs	r0, 7
+ 2cc:	fd cf       	rjmp	.-6      	; 0x2c8 <set_register_burst+0x16>
 	return SPDR;
- 2c0:	8e b5       	in	r24, 0x2e	; 46
+ 2ce:	8e b5       	in	r24, 0x2e	; 46
 	uint8_t i;
 	
 	select();
 	send_spi(address);
 	
 	for (i = 0; i < length; i++) {
- 2c2:	9f 5f       	subi	r25, 0xFF	; 255
- 2c4:	31 96       	adiw	r30, 0x01	; 1
- 2c6:	94 17       	cp	r25, r20
- 2c8:	b0 f3       	brcs	.-20     	; 0x2b6 <set_register_burst+0x12>
+ 2d0:	9f 5f       	subi	r25, 0xFF	; 255
+ 2d2:	31 96       	adiw	r30, 0x01	; 1
+ 2d4:	94 17       	cp	r25, r20
+ 2d6:	b0 f3       	brcs	.-20     	; 0x2c4 <set_register_burst+0x12>
 inline void select(void) {
 	PORTB &= ~(1 << SPI_SS_PIN);
 }
 
 inline void deselect(void) {
 	PORTB |= (1 << SPI_SS_PIN);
- 2ca:	28 9a       	sbi	0x05, 0	; 5
+ 2d8:	28 9a       	sbi	0x05, 0	; 5
 	for (i = 0; i < length; i++) {
 		send_spi(data[i]);
 	}
 	
 	deselect();
 }
- 2cc:	08 95       	ret
+ 2da:	08 95       	ret
 
-000002ce <write_settings>:
+000002dc <write_settings>:
 void write_settings(REGSETTINGS *pRegSettings) {
- 2ce:	0f 93       	push	r16
- 2d0:	1f 93       	push	r17
- 2d2:	8c 01       	movw	r16, r24
+ 2dc:	0f 93       	push	r16
+ 2de:	1f 93       	push	r17
+ 2e0:	8c 01       	movw	r16, r24
 	set_register(CC1150_IOCFG1, 	pRegSettings->IOCFG1);
- 2d4:	81 e0       	ldi	r24, 0x01	; 1
- 2d6:	f8 01       	movw	r30, r16
- 2d8:	60 81       	ld	r22, Z
- 2da:	d7 df       	rcall	.-82     	; 0x28a <set_register>
+ 2e2:	81 e0       	ldi	r24, 0x01	; 1
+ 2e4:	f8 01       	movw	r30, r16
+ 2e6:	60 81       	ld	r22, Z
+ 2e8:	d7 df       	rcall	.-82     	; 0x298 <set_register>
 	set_register(CC1150_IOCFG0, 	pRegSettings->IOCFG0);
- 2dc:	82 e0       	ldi	r24, 0x02	; 2
- 2de:	f8 01       	movw	r30, r16
- 2e0:	61 81       	ldd	r22, Z+1	; 0x01
- 2e2:	d3 df       	rcall	.-90     	; 0x28a <set_register>
+ 2ea:	82 e0       	ldi	r24, 0x02	; 2
+ 2ec:	f8 01       	movw	r30, r16
+ 2ee:	61 81       	ldd	r22, Z+1	; 0x01
+ 2f0:	d3 df       	rcall	.-90     	; 0x298 <set_register>
 	set_register(CC1150_FIFOTHR, 	pRegSettings->FIFOTHR);
- 2e4:	83 e0       	ldi	r24, 0x03	; 3
- 2e6:	f8 01       	movw	r30, r16
- 2e8:	62 81       	ldd	r22, Z+2	; 0x02
- 2ea:	cf df       	rcall	.-98     	; 0x28a <set_register>
+ 2f2:	83 e0       	ldi	r24, 0x03	; 3
+ 2f4:	f8 01       	movw	r30, r16
+ 2f6:	62 81       	ldd	r22, Z+2	; 0x02
+ 2f8:	cf df       	rcall	.-98     	; 0x298 <set_register>
 	set_register(CC1150_SYNC1, 		pRegSettings->SYNC1);
- 2ec:	84 e0       	ldi	r24, 0x04	; 4
- 2ee:	f8 01       	movw	r30, r16
- 2f0:	63 81       	ldd	r22, Z+3	; 0x03
- 2f2:	cb df       	rcall	.-106    	; 0x28a <set_register>
+ 2fa:	84 e0       	ldi	r24, 0x04	; 4
+ 2fc:	f8 01       	movw	r30, r16
+ 2fe:	63 81       	ldd	r22, Z+3	; 0x03
+ 300:	cb df       	rcall	.-106    	; 0x298 <set_register>
 	set_register(CC1150_SYNC0, 		pRegSettings->SYNC0);
- 2f4:	85 e0       	ldi	r24, 0x05	; 5
- 2f6:	f8 01       	movw	r30, r16
- 2f8:	64 81       	ldd	r22, Z+4	; 0x04
- 2fa:	c7 df       	rcall	.-114    	; 0x28a <set_register>
+ 302:	85 e0       	ldi	r24, 0x05	; 5
+ 304:	f8 01       	movw	r30, r16
+ 306:	64 81       	ldd	r22, Z+4	; 0x04
+ 308:	c7 df       	rcall	.-114    	; 0x298 <set_register>
 	set_register(CC1150_PKTLEN, 	pRegSettings->PKTLEN);
- 2fc:	86 e0       	ldi	r24, 0x06	; 6
- 2fe:	f8 01       	movw	r30, r16
- 300:	65 81       	ldd	r22, Z+5	; 0x05
- 302:	c3 df       	rcall	.-122    	; 0x28a <set_register>
+ 30a:	86 e0       	ldi	r24, 0x06	; 6
+ 30c:	f8 01       	movw	r30, r16
+ 30e:	65 81       	ldd	r22, Z+5	; 0x05
+ 310:	c3 df       	rcall	.-122    	; 0x298 <set_register>
 	set_register(CC1150_PKTCTRL0, 	pRegSettings->PKTCTRL0);
- 304:	88 e0       	ldi	r24, 0x08	; 8
- 306:	f8 01       	movw	r30, r16
- 308:	66 81       	ldd	r22, Z+6	; 0x06
- 30a:	bf df       	rcall	.-130    	; 0x28a <set_register>
+ 312:	88 e0       	ldi	r24, 0x08	; 8
+ 314:	f8 01       	movw	r30, r16
+ 316:	66 81       	ldd	r22, Z+6	; 0x06
+ 318:	bf df       	rcall	.-130    	; 0x298 <set_register>
 	set_register(CC1150_ADDR, 		pRegSettings->ADDR);
- 30c:	89 e0       	ldi	r24, 0x09	; 9
- 30e:	f8 01       	movw	r30, r16
- 310:	67 81       	ldd	r22, Z+7	; 0x07
- 312:	bb df       	rcall	.-138    	; 0x28a <set_register>
+ 31a:	89 e0       	ldi	r24, 0x09	; 9
+ 31c:	f8 01       	movw	r30, r16
+ 31e:	67 81       	ldd	r22, Z+7	; 0x07
+ 320:	bb df       	rcall	.-138    	; 0x298 <set_register>
 	set_register(CC1150_CHANNR,		pRegSettings->CHANNR);
- 314:	8a e0       	ldi	r24, 0x0A	; 10
- 316:	f8 01       	movw	r30, r16
- 318:	60 85       	ldd	r22, Z+8	; 0x08
- 31a:	b7 df       	rcall	.-146    	; 0x28a <set_register>
+ 322:	8a e0       	ldi	r24, 0x0A	; 10
+ 324:	f8 01       	movw	r30, r16
+ 326:	60 85       	ldd	r22, Z+8	; 0x08
+ 328:	b7 df       	rcall	.-146    	; 0x298 <set_register>
 	set_register(CC1150_FREQ2, 		pRegSettings->FREQ2);
- 31c:	8d e0       	ldi	r24, 0x0D	; 13
- 31e:	f8 01       	movw	r30, r16
- 320:	61 85       	ldd	r22, Z+9	; 0x09
- 322:	b3 df       	rcall	.-154    	; 0x28a <set_register>
+ 32a:	8d e0       	ldi	r24, 0x0D	; 13
+ 32c:	f8 01       	movw	r30, r16
+ 32e:	61 85       	ldd	r22, Z+9	; 0x09
+ 330:	b3 df       	rcall	.-154    	; 0x298 <set_register>
 	set_register(CC1150_FREQ1, 		pRegSettings->FREQ1);
- 324:	8e e0       	ldi	r24, 0x0E	; 14
- 326:	f8 01       	movw	r30, r16
- 328:	62 85       	ldd	r22, Z+10	; 0x0a
- 32a:	af df       	rcall	.-162    	; 0x28a <set_register>
+ 332:	8e e0       	ldi	r24, 0x0E	; 14
+ 334:	f8 01       	movw	r30, r16
+ 336:	62 85       	ldd	r22, Z+10	; 0x0a
+ 338:	af df       	rcall	.-162    	; 0x298 <set_register>
 	set_register(CC1150_FREQ0, 		pRegSettings->FREQ0);
- 32c:	8f e0       	ldi	r24, 0x0F	; 15
- 32e:	f8 01       	movw	r30, r16
- 330:	63 85       	ldd	r22, Z+11	; 0x0b
- 332:	ab df       	rcall	.-170    	; 0x28a <set_register>
+ 33a:	8f e0       	ldi	r24, 0x0F	; 15
+ 33c:	f8 01       	movw	r30, r16
+ 33e:	63 85       	ldd	r22, Z+11	; 0x0b
+ 340:	ab df       	rcall	.-170    	; 0x298 <set_register>
 	set_register(CC1150_MDMCFG4, 	pRegSettings->MDMCFG4);
- 334:	80 e1       	ldi	r24, 0x10	; 16
- 336:	f8 01       	movw	r30, r16
- 338:	64 85       	ldd	r22, Z+12	; 0x0c
- 33a:	a7 df       	rcall	.-178    	; 0x28a <set_register>
+ 342:	80 e1       	ldi	r24, 0x10	; 16
+ 344:	f8 01       	movw	r30, r16
+ 346:	64 85       	ldd	r22, Z+12	; 0x0c
+ 348:	a7 df       	rcall	.-178    	; 0x298 <set_register>
 	set_register(CC1150_MDMCFG3, 	pRegSettings->MDMCFG3);
- 33c:	81 e1       	ldi	r24, 0x11	; 17
- 33e:	f8 01       	movw	r30, r16
- 340:	65 85       	ldd	r22, Z+13	; 0x0d
- 342:	a3 df       	rcall	.-186    	; 0x28a <set_register>
+ 34a:	81 e1       	ldi	r24, 0x11	; 17
+ 34c:	f8 01       	movw	r30, r16
+ 34e:	65 85       	ldd	r22, Z+13	; 0x0d
+ 350:	a3 df       	rcall	.-186    	; 0x298 <set_register>
 	set_register(CC1150_MDMCFG2, 	pRegSettings->MDMCFG2);
- 344:	82 e1       	ldi	r24, 0x12	; 18
- 346:	f8 01       	movw	r30, r16
- 348:	66 85       	ldd	r22, Z+14	; 0x0e
- 34a:	9f df       	rcall	.-194    	; 0x28a <set_register>
+ 352:	82 e1       	ldi	r24, 0x12	; 18
+ 354:	f8 01       	movw	r30, r16
+ 356:	66 85       	ldd	r22, Z+14	; 0x0e
+ 358:	9f df       	rcall	.-194    	; 0x298 <set_register>
 	set_register(CC1150_MDMCFG1, 	pRegSettings->MDMCFG1);
- 34c:	83 e1       	ldi	r24, 0x13	; 19
- 34e:	f8 01       	movw	r30, r16
- 350:	67 85       	ldd	r22, Z+15	; 0x0f
- 352:	9b df       	rcall	.-202    	; 0x28a <set_register>
+ 35a:	83 e1       	ldi	r24, 0x13	; 19
+ 35c:	f8 01       	movw	r30, r16
+ 35e:	67 85       	ldd	r22, Z+15	; 0x0f
+ 360:	9b df       	rcall	.-202    	; 0x298 <set_register>
 	set_register(CC1150_MDMCFG0, 	pRegSettings->MDMCFG0);
- 354:	84 e1       	ldi	r24, 0x14	; 20
- 356:	f8 01       	movw	r30, r16
- 358:	60 89       	ldd	r22, Z+16	; 0x10
- 35a:	97 df       	rcall	.-210    	; 0x28a <set_register>
+ 362:	84 e1       	ldi	r24, 0x14	; 20
+ 364:	f8 01       	movw	r30, r16
+ 366:	60 89       	ldd	r22, Z+16	; 0x10
+ 368:	97 df       	rcall	.-210    	; 0x298 <set_register>
 	set_register(CC1150_DEVIATN, 	pRegSettings->DEVIATN);
- 35c:	85 e1       	ldi	r24, 0x15	; 21
- 35e:	f8 01       	movw	r30, r16
- 360:	61 89       	ldd	r22, Z+17	; 0x11
- 362:	93 df       	rcall	.-218    	; 0x28a <set_register>
+ 36a:	85 e1       	ldi	r24, 0x15	; 21
+ 36c:	f8 01       	movw	r30, r16
+ 36e:	61 89       	ldd	r22, Z+17	; 0x11
+ 370:	93 df       	rcall	.-218    	; 0x298 <set_register>
 	set_register(CC1150_MCSM1, 		pRegSettings->MCSM1);
- 364:	87 e1       	ldi	r24, 0x17	; 23
- 366:	f8 01       	movw	r30, r16
- 368:	62 89       	ldd	r22, Z+18	; 0x12
- 36a:	8f df       	rcall	.-226    	; 0x28a <set_register>
+ 372:	87 e1       	ldi	r24, 0x17	; 23
+ 374:	f8 01       	movw	r30, r16
+ 376:	62 89       	ldd	r22, Z+18	; 0x12
+ 378:	8f df       	rcall	.-226    	; 0x298 <set_register>
 	set_register(CC1150_MCSM0, 		pRegSettings->MCSM0);
- 36c:	88 e1       	ldi	r24, 0x18	; 24
- 36e:	f8 01       	movw	r30, r16
- 370:	63 89       	ldd	r22, Z+19	; 0x13
- 372:	8b df       	rcall	.-234    	; 0x28a <set_register>
+ 37a:	88 e1       	ldi	r24, 0x18	; 24
+ 37c:	f8 01       	movw	r30, r16
+ 37e:	63 89       	ldd	r22, Z+19	; 0x13
+ 380:	8b df       	rcall	.-234    	; 0x298 <set_register>
 	set_register(CC1150_FREND0, 	pRegSettings->FREND0);
- 374:	82 e2       	ldi	r24, 0x22	; 34
- 376:	f8 01       	movw	r30, r16
- 378:	64 89       	ldd	r22, Z+20	; 0x14
- 37a:	87 df       	rcall	.-242    	; 0x28a <set_register>
+ 382:	82 e2       	ldi	r24, 0x22	; 34
+ 384:	f8 01       	movw	r30, r16
+ 386:	64 89       	ldd	r22, Z+20	; 0x14
+ 388:	87 df       	rcall	.-242    	; 0x298 <set_register>
 	set_register(CC1150_FSCAL3, 	pRegSettings->FSCAL3);
- 37c:	83 e2       	ldi	r24, 0x23	; 35
- 37e:	f8 01       	movw	r30, r16
- 380:	65 89       	ldd	r22, Z+21	; 0x15
- 382:	83 df       	rcall	.-250    	; 0x28a <set_register>
+ 38a:	83 e2       	ldi	r24, 0x23	; 35
+ 38c:	f8 01       	movw	r30, r16
+ 38e:	65 89       	ldd	r22, Z+21	; 0x15
+ 390:	83 df       	rcall	.-250    	; 0x298 <set_register>
 	set_register(CC1150_FSCAL2, 	pRegSettings->FSCAL2); 
- 384:	84 e2       	ldi	r24, 0x24	; 36
- 386:	f8 01       	movw	r30, r16
- 388:	66 89       	ldd	r22, Z+22	; 0x16
- 38a:	7f df       	rcall	.-258    	; 0x28a <set_register>
+ 392:	84 e2       	ldi	r24, 0x24	; 36
+ 394:	f8 01       	movw	r30, r16
+ 396:	66 89       	ldd	r22, Z+22	; 0x16
+ 398:	7f df       	rcall	.-258    	; 0x298 <set_register>
 	set_register(CC1150_FSCAL1, 	pRegSettings->FSCAL1); 
- 38c:	85 e2       	ldi	r24, 0x25	; 37
- 38e:	f8 01       	movw	r30, r16
- 390:	67 89       	ldd	r22, Z+23	; 0x17
- 392:	7b df       	rcall	.-266    	; 0x28a <set_register>
+ 39a:	85 e2       	ldi	r24, 0x25	; 37
+ 39c:	f8 01       	movw	r30, r16
+ 39e:	67 89       	ldd	r22, Z+23	; 0x17
+ 3a0:	7b df       	rcall	.-266    	; 0x298 <set_register>
 	set_register(CC1150_FSCAL0, 	pRegSettings->FSCAL0); 
- 394:	86 e2       	ldi	r24, 0x26	; 38
- 396:	f8 01       	movw	r30, r16
- 398:	60 8d       	ldd	r22, Z+24	; 0x18
- 39a:	77 df       	rcall	.-274    	; 0x28a <set_register>
+ 3a2:	86 e2       	ldi	r24, 0x26	; 38
+ 3a4:	f8 01       	movw	r30, r16
+ 3a6:	60 8d       	ldd	r22, Z+24	; 0x18
+ 3a8:	77 df       	rcall	.-274    	; 0x298 <set_register>
 	set_register(CC1150_FSTEST, 	pRegSettings->FSTEST); 
- 39c:	89 e2       	ldi	r24, 0x29	; 41
- 39e:	f8 01       	movw	r30, r16
- 3a0:	61 8d       	ldd	r22, Z+25	; 0x19
- 3a2:	73 df       	rcall	.-282    	; 0x28a <set_register>
+ 3aa:	89 e2       	ldi	r24, 0x29	; 41
+ 3ac:	f8 01       	movw	r30, r16
+ 3ae:	61 8d       	ldd	r22, Z+25	; 0x19
+ 3b0:	73 df       	rcall	.-282    	; 0x298 <set_register>
 	set_register(CC1150_PTEST, 		pRegSettings->PTEST); 
- 3a4:	8a e2       	ldi	r24, 0x2A	; 42
- 3a6:	f8 01       	movw	r30, r16
- 3a8:	62 8d       	ldd	r22, Z+26	; 0x1a
- 3aa:	6f df       	rcall	.-290    	; 0x28a <set_register>
+ 3b2:	8a e2       	ldi	r24, 0x2A	; 42
+ 3b4:	f8 01       	movw	r30, r16
+ 3b6:	62 8d       	ldd	r22, Z+26	; 0x1a
+ 3b8:	6f df       	rcall	.-290    	; 0x298 <set_register>
 	set_register(CC1150_TEST2, 		pRegSettings->TEST2); 
- 3ac:	8c e2       	ldi	r24, 0x2C	; 44
- 3ae:	f8 01       	movw	r30, r16
- 3b0:	63 8d       	ldd	r22, Z+27	; 0x1b
- 3b2:	6b df       	rcall	.-298    	; 0x28a <set_register>
+ 3ba:	8c e2       	ldi	r24, 0x2C	; 44
+ 3bc:	f8 01       	movw	r30, r16
+ 3be:	63 8d       	ldd	r22, Z+27	; 0x1b
+ 3c0:	6b df       	rcall	.-298    	; 0x298 <set_register>
 }
- 3b4:	1f 91       	pop	r17
- 3b6:	0f 91       	pop	r16
- 3b8:	08 95       	ret
+ 3c2:	1f 91       	pop	r17
+ 3c4:	0f 91       	pop	r16
+ 3c6:	08 95       	ret
 
-000003ba <main>:
+000003c8 <main>:
 
 int main(void) {
- 3ba:	cf 93       	push	r28
- 3bc:	df 93       	push	r29
+ 3c8:	cf 93       	push	r28
+ 3ca:	df 93       	push	r29
 	CPU_PRESCALE(CPU_16MHz);
- 3be:	80 e8       	ldi	r24, 0x80	; 128
- 3c0:	80 93 61 00 	sts	0x0061, r24
- 3c4:	10 92 61 00 	sts	0x0061, r1
+ 3cc:	80 e8       	ldi	r24, 0x80	; 128
+ 3ce:	80 93 61 00 	sts	0x0061, r24
+ 3d2:	10 92 61 00 	sts	0x0061, r1
 	
 	// Door contact runs very slowly
 	// But CC1150 supports 4MHz
 	setup_spi(SPI_MSTR_CLK4);
- 3c8:	80 e0       	ldi	r24, 0x00	; 0
- 3ca:	aa de       	rcall	.-684    	; 0x120 <setup_spi>
-	
+ 3d6:	80 e0       	ldi	r24, 0x00	; 0
+ 3d8:	a3 de       	rcall	.-698    	; 0x120 <setup_spi>
 	
 }
 
+// SPI helper functions
 inline void enable_spi(void) {
 	SPCR |= (1 << SPE);
- 3cc:	8c b5       	in	r24, 0x2c	; 44
- 3ce:	80 64       	ori	r24, 0x40	; 64
- 3d0:	8c bd       	out	0x2c, r24	; 44
+ 3da:	8c b5       	in	r24, 0x2c	; 44
+ 3dc:	80 64       	ori	r24, 0x40	; 64
+ 3de:	8c bd       	out	0x2c, r24	; 44
 	uint8_t Count; /**< Number of bytes currently stored in the buffer. */
 } RingBuffer_t;
 
 static inline void RingBuffer_InitBuffer(RingBuffer_t* Buffer, uint8_t* const DataPtr, const uint16_t Size)
 {
 	uint8_t CurrentGlobalInt = SREG;
- 3d2:	2f b7       	in	r18, 0x3f	; 63
+ 3e0:	2f b7       	in	r18, 0x3f	; 63
 	cli();
- 3d4:	f8 94       	cli
+ 3e2:	f8 94       	cli
 
 	Buffer->In     = DataPtr;
- 3d6:	89 e3       	ldi	r24, 0x39	; 57
- 3d8:	92 e0       	ldi	r25, 0x02	; 2
- 3da:	90 93 5a 02 	sts	0x025A, r25
- 3de:	80 93 59 02 	sts	0x0259, r24
+ 3e4:	8b e3       	ldi	r24, 0x3B	; 59
+ 3e6:	92 e0       	ldi	r25, 0x02	; 2
+ 3e8:	90 93 5c 02 	sts	0x025C, r25
+ 3ec:	80 93 5b 02 	sts	0x025B, r24
 	Buffer->Out    = DataPtr;
- 3e2:	90 93 5c 02 	sts	0x025C, r25
- 3e6:	80 93 5b 02 	sts	0x025B, r24
+ 3f0:	90 93 5e 02 	sts	0x025E, r25
+ 3f4:	80 93 5d 02 	sts	0x025D, r24
 	Buffer->Start  = &DataPtr[0];
- 3ea:	90 93 5e 02 	sts	0x025E, r25
- 3ee:	80 93 5d 02 	sts	0x025D, r24
+ 3f8:	90 93 60 02 	sts	0x0260, r25
+ 3fc:	80 93 5f 02 	sts	0x025F, r24
 	Buffer->End    = &DataPtr[Size];
- 3f2:	80 96       	adiw	r24, 0x20	; 32
- 3f4:	90 93 60 02 	sts	0x0260, r25
- 3f8:	80 93 5f 02 	sts	0x025F, r24
+ 400:	80 96       	adiw	r24, 0x20	; 32
+ 402:	90 93 62 02 	sts	0x0262, r25
+ 406:	80 93 61 02 	sts	0x0261, r24
 	Buffer->Size   = Size;
- 3fc:	80 e2       	ldi	r24, 0x20	; 32
- 3fe:	80 93 61 02 	sts	0x0261, r24
+ 40a:	80 e2       	ldi	r24, 0x20	; 32
+ 40c:	80 93 63 02 	sts	0x0263, r24
 	Buffer->Count  = 0;
- 402:	10 92 62 02 	sts	0x0262, r1
+ 410:	10 92 64 02 	sts	0x0264, r1
 
 	SREG = CurrentGlobalInt;
- 406:	2f bf       	out	0x3f, r18	; 63
+ 414:	2f bf       	out	0x3f, r18	; 63
 	enable_spi();
 	
 	RingBuffer_InitBuffer(&tx_buffer, tx_buffer_data, sizeof(tx_buffer_data));
 
 	// Reset and then set registers and PA table
 	send_command_sres();
- 408:	35 df       	rcall	.-406    	; 0x274 <send_command_sres>
+ 416:	35 df       	rcall	.-406    	; 0x282 <send_command_sres>
 	write_settings(&regSettings);
- 40a:	80 e0       	ldi	r24, 0x00	; 0
- 40c:	92 e0       	ldi	r25, 0x02	; 2
- 40e:	5f df       	rcall	.-322    	; 0x2ce <write_settings>
+ 418:	80 e0       	ldi	r24, 0x00	; 0
+ 41a:	92 e0       	ldi	r25, 0x02	; 2
+ 41c:	5f df       	rcall	.-322    	; 0x2dc <write_settings>
+	// PATABLE is at 0x3E for read, and 0x7E for write.
 	set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
- 410:	8e e7       	ldi	r24, 0x7E	; 126
- 412:	6c e1       	ldi	r22, 0x1C	; 28
- 414:	72 e0       	ldi	r23, 0x02	; 2
- 416:	48 e0       	ldi	r20, 0x08	; 8
- 418:	45 df       	rcall	.-374    	; 0x2a4 <set_register_burst>
+ 41e:	8e e7       	ldi	r24, 0x7E	; 126
+ 420:	6c e1       	ldi	r22, 0x1C	; 28
+ 422:	72 e0       	ldi	r23, 0x02	; 2
+ 424:	48 e0       	ldi	r20, 0x08	; 8
+ 426:	45 df       	rcall	.-374    	; 0x2b2 <set_register_burst>
     milliseconds can be achieved.
  */
 void
 _delay_loop_2(uint16_t __count)
 {
 	__asm__ volatile (
- 41a:	c0 e9       	ldi	r28, 0x90	; 144
- 41c:	d1 e0       	ldi	r29, 0x01	; 1
+ 428:	c0 e9       	ldi	r28, 0x90	; 144
+ 42a:	d1 e0       	ldi	r29, 0x01	; 1
 
 	// Send door signal 50 times
 	while(1) {
 		send_command(CC1150_STX);
- 41e:	85 e3       	ldi	r24, 0x35	; 53
- 420:	21 df       	rcall	.-446    	; 0x264 <send_command>
+ 42c:	85 e3       	ldi	r24, 0x35	; 53
+ 42e:	21 df       	rcall	.-446    	; 0x272 <send_command>
 		
 		enable_pcint();
- 422:	90 de       	rcall	.-736    	; 0x144 <enable_pcint>
- 424:	40 e0       	ldi	r20, 0x00	; 0
- 426:	50 e0       	ldi	r21, 0x00	; 0
- 428:	36 c0       	rjmp	.+108    	; 0x496 <main+0xdc>
+ 430:	89 de       	rcall	.-750    	; 0x144 <enable_pcint>
+ 432:	40 e0       	ldi	r20, 0x00	; 0
+ 434:	50 e0       	ldi	r21, 0x00	; 0
+ 436:	36 c0       	rjmp	.+108    	; 0x4a4 <main+0xdc>
 	return (RingBuffer_GetCount(Buffer) == Buffer->Size);
 }
 
 static inline void RingBuffer_Insert(RingBuffer_t* Buffer, const uint8_t Data)
 {
 	*Buffer->In = Data;
- 42a:	e0 91 59 02 	lds	r30, 0x0259
- 42e:	f0 91 5a 02 	lds	r31, 0x025A
- 432:	8c 91       	ld	r24, X
- 434:	80 83       	st	Z, r24
+ 438:	e0 91 5b 02 	lds	r30, 0x025B
+ 43c:	f0 91 5c 02 	lds	r31, 0x025C
+ 440:	8c 91       	ld	r24, X
+ 442:	80 83       	st	Z, r24
 
 	if (++Buffer->In == Buffer->End)
- 436:	80 91 59 02 	lds	r24, 0x0259
- 43a:	90 91 5a 02 	lds	r25, 0x025A
- 43e:	01 96       	adiw	r24, 0x01	; 1
- 440:	90 93 5a 02 	sts	0x025A, r25
- 444:	80 93 59 02 	sts	0x0259, r24
- 448:	20 91 5f 02 	lds	r18, 0x025F
- 44c:	30 91 60 02 	lds	r19, 0x0260
- 450:	82 17       	cp	r24, r18
- 452:	93 07       	cpc	r25, r19
- 454:	41 f4       	brne	.+16     	; 0x466 <main+0xac>
+ 444:	80 91 5b 02 	lds	r24, 0x025B
+ 448:	90 91 5c 02 	lds	r25, 0x025C
+ 44c:	01 96       	adiw	r24, 0x01	; 1
+ 44e:	90 93 5c 02 	sts	0x025C, r25
+ 452:	80 93 5b 02 	sts	0x025B, r24
+ 456:	20 91 61 02 	lds	r18, 0x0261
+ 45a:	30 91 62 02 	lds	r19, 0x0262
+ 45e:	82 17       	cp	r24, r18
+ 460:	93 07       	cpc	r25, r19
+ 462:	41 f4       	brne	.+16     	; 0x474 <main+0xac>
 	  Buffer->In = Buffer->Start;
- 456:	80 91 5d 02 	lds	r24, 0x025D
- 45a:	90 91 5e 02 	lds	r25, 0x025E
- 45e:	90 93 5a 02 	sts	0x025A, r25
- 462:	80 93 59 02 	sts	0x0259, r24
+ 464:	80 91 5f 02 	lds	r24, 0x025F
+ 468:	90 91 60 02 	lds	r25, 0x0260
+ 46c:	90 93 5c 02 	sts	0x025C, r25
+ 470:	80 93 5b 02 	sts	0x025B, r24
 	
 	uint8_t CurrentGlobalInt = SREG;
- 466:	9f b7       	in	r25, 0x3f	; 63
+ 474:	9f b7       	in	r25, 0x3f	; 63
 	cli();
- 468:	f8 94       	cli
+ 476:	f8 94       	cli
 
 	Buffer->Count++;
- 46a:	80 91 62 02 	lds	r24, 0x0262
- 46e:	8f 5f       	subi	r24, 0xFF	; 255
- 470:	80 93 62 02 	sts	0x0262, r24
+ 478:	80 91 64 02 	lds	r24, 0x0264
+ 47c:	8f 5f       	subi	r24, 0xFF	; 255
+ 47e:	80 93 64 02 	sts	0x0264, r24
 
 	SREG = CurrentGlobalInt;
- 474:	9f bf       	out	0x3f, r25	; 63
- 476:	11 96       	adiw	r26, 0x01	; 1
+ 482:	9f bf       	out	0x3f, r25	; 63
+ 484:	11 96       	adiw	r26, 0x01	; 1
 		
 		for (int j = 0; j < 50; j++) {
 			for (int i = 0; i < sizeof(signature); i++) {
- 478:	82 e0       	ldi	r24, 0x02	; 2
- 47a:	a6 33       	cpi	r26, 0x36	; 54
- 47c:	b8 07       	cpc	r27, r24
- 47e:	a9 f6       	brne	.-86     	; 0x42a <main+0x70>
+ 486:	82 e0       	ldi	r24, 0x02	; 2
+ 488:	a7 33       	cpi	r26, 0x37	; 55
+ 48a:	b8 07       	cpc	r27, r24
+ 48c:	a9 f6       	brne	.-86     	; 0x438 <main+0x70>
 				RingBuffer_Insert(&tx_buffer, signature[i]);
 			}
 			
 			// Allow interrupt handler to send data
 			clear_to_send = 0;
- 480:	10 92 36 02 	sts	0x0236, r1
+ 48e:	10 92 37 02 	sts	0x0237, r1
 			
 			// Churn until interrupt handler is done
 			while(clear_to_send == 0);
- 484:	80 91 36 02 	lds	r24, 0x0236
- 488:	88 23       	and	r24, r24
- 48a:	e1 f3       	breq	.-8      	; 0x484 <main+0xca>
+ 492:	80 91 37 02 	lds	r24, 0x0237
+ 496:	88 23       	and	r24, r24
+ 498:	e1 f3       	breq	.-8      	; 0x492 <main+0xca>
 	while(1) {
 		send_command(CC1150_STX);
 		
 		enable_pcint();
 		
 		for (int j = 0; j < 50; j++) {
- 48c:	4f 5f       	subi	r20, 0xFF	; 255
- 48e:	5f 4f       	sbci	r21, 0xFF	; 255
- 490:	42 33       	cpi	r20, 0x32	; 50
- 492:	51 05       	cpc	r21, r1
- 494:	19 f0       	breq	.+6      	; 0x49c <main+0xe2>
- 496:	a4 e2       	ldi	r26, 0x24	; 36
- 498:	b2 e0       	ldi	r27, 0x02	; 2
- 49a:	ee cf       	rjmp	.-36     	; 0x478 <main+0xbe>
+ 49a:	4f 5f       	subi	r20, 0xFF	; 255
+ 49c:	5f 4f       	sbci	r21, 0xFF	; 255
+ 49e:	42 33       	cpi	r20, 0x32	; 50
+ 4a0:	51 05       	cpc	r21, r1
+ 4a2:	19 f0       	breq	.+6      	; 0x4aa <main+0xe2>
+ 4a4:	a4 e2       	ldi	r26, 0x24	; 36
+ 4a6:	b2 e0       	ldi	r27, 0x02	; 2
+ 4a8:	ee cf       	rjmp	.-36     	; 0x486 <main+0xbe>
 			
 			// Churn until interrupt handler is done
 			while(clear_to_send == 0);
 		}
 	
 		disable_pcint();
- 49c:	64 de       	rcall	.-824    	; 0x166 <disable_pcint>
+ 4aa:	5d de       	rcall	.-838    	; 0x166 <disable_pcint>
 		
 		send_command(CC1150_SIDLE);
- 49e:	86 e3       	ldi	r24, 0x36	; 54
- 4a0:	e1 de       	rcall	.-574    	; 0x264 <send_command>
- 4a2:	80 e5       	ldi	r24, 0x50	; 80
- 4a4:	93 ec       	ldi	r25, 0xC3	; 195
- 4a6:	fe 01       	movw	r30, r28
- 4a8:	31 97       	sbiw	r30, 0x01	; 1
- 4aa:	f1 f7       	brne	.-4      	; 0x4a8 <main+0xee>
+ 4ac:	86 e3       	ldi	r24, 0x36	; 54
+ 4ae:	e1 de       	rcall	.-574    	; 0x272 <send_command>
+ 4b0:	80 e5       	ldi	r24, 0x50	; 80
+ 4b2:	93 ec       	ldi	r25, 0xC3	; 195
+ 4b4:	fe 01       	movw	r30, r28
+ 4b6:	31 97       	sbiw	r30, 0x01	; 1
+ 4b8:	f1 f7       	brne	.-4      	; 0x4b6 <main+0xee>
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
 		{
 			// wait 1/10 ms
 			_delay_loop_2(((F_CPU) / 4e3) / 10);
 			__ticks --;
- 4ac:	01 97       	sbiw	r24, 0x01	; 1
+ 4ba:	01 97       	sbiw	r24, 0x01	; 1
 		__ticks = 1;
 	else if (__tmp > 65535)
 	{
 		//	__ticks = requested delay in 1/10 ms
 		__ticks = (uint16_t) (__ms * 10.0);
 		while(__ticks)
- 4ae:	d9 f7       	brne	.-10     	; 0x4a6 <main+0xec>
- 4b0:	b6 cf       	rjmp	.-148    	; 0x41e <main+0x64>
+ 4bc:	d9 f7       	brne	.-10     	; 0x4b4 <main+0xec>
+ 4be:	b6 cf       	rjmp	.-148    	; 0x42c <main+0x64>
 
-000004b2 <_exit>:
- 4b2:	f8 94       	cli
+000004c0 <_exit>:
+ 4c0:	f8 94       	cli
 
-000004b4 <__stop_program>:
- 4b4:	ff cf       	rjmp	.-2      	; 0x4b4 <__stop_program>
+000004c2 <__stop_program>:
+ 4c2:	ff cf       	rjmp	.-2      	; 0x4c2 <__stop_program>

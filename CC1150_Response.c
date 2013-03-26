@@ -57,7 +57,7 @@ uint8_t paTable[] = {
 
 // This holds the raw signal clocked out
 // From logic trace and Python parser
-uint8_t signature[] = {
+/*uint8_t signature[] = {
 	0xe2,
 	0x4d,
 	0xa4,
@@ -76,6 +76,28 @@ uint8_t signature[] = {
 	0x92, 
 	0x49, 
 	0xa4
+};
+*/
+uint8_t signature[] = {
+ 0xe2,
+ 0x4d,
+ 0xa4,
+ 0x93,
+ 0x69,
+ 0xa4,
+ 0x92,
+ 0x49,
+ 0xa4,
+ 0x92,
+ 0x69,
+ 0xa4,
+ 0x92,
+ 0x49,
+ 0x24,
+ 0x92,
+ 0x49,
+ 0xa4,
+ 0x9b
 };
 
 volatile uint8_t clear_to_send = 1;
@@ -128,6 +150,7 @@ void disable_pcint(void) {
 
 // Interrupt handler for pin change interrupt.
 // This clocks the ring buffer out on the L0 pin
+// in responses to changes B3
 ISR(PCINT0_vect) {
 	static uint8_t bit = 0x80; // Which bit are we clocking out
 	static uint8_t byte = 0; // Current byte we are clocking out
@@ -153,11 +176,14 @@ ISR(PCINT0_vect) {
 		// We have reached the end of the byte
 		if (bit == 0x00) {
 			bit = 0x80;
-			
-			if (RingBuffer_IsEmpty(&tx_buffer)) {
+		}
+		
+		if (RingBuffer_IsEmpty(&tx_buffer)) {
+			if (bit == 0x02) {
 				clear_to_send = 1;
-			}	
-		}	
+				bit = 0x80;
+			}
+		}
 	}
 	
 	
