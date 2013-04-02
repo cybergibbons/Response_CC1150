@@ -120,6 +120,7 @@ void start_tx() {
 	tx_byte = 0;
 	tx_bit = 0;
 	tx_header = 1;
+	tx_sample = 0;
 	tx_active = 1; // flag to indicate if transmit is active
 }
 
@@ -293,9 +294,6 @@ int main(void) {
 	// But CC1150 supports 4MHz
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
-	
-	DDRL |= (1 << PORTL1);
-	DDRL |= (1 << PORTL2);
 
 	// Reset and then set registers and PA table
 	send_command_sres();
