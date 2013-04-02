@@ -8,14 +8,21 @@ c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_clear_bss.o)
 Allocating common symbols
 Common symbol       size              file
 
-tx_buffer_data      0x20              CC1150_Response.o
-tx_buffer           0xa               CC1150_Response.o
+tx_sample           0x1               CC1150_Response.o
+tx_byte             0x1               CC1150_Response.o
+tx_header           0x1               CC1150_Response.o
+tx_active           0x1               CC1150_Response.o
+tx_len              0x1               CC1150_Response.o
+tx_bit              0x1               CC1150_Response.o
 
 Discarded input sections
 
  .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
  .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
  .text          0x00000000        0x0 CC1150_Response.o
+ .bss           0x00000000        0x0 CC1150_Response.o
+ .text.start_tx
+                0x00000000        0x0 CC1150_Response.o
  .text          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
@@ -136,7 +143,7 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x4c4
+.text           0x00000000      0x466
  *(.vectors)
  .vectors       0x00000000       0xe4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
                 0x00000000                __vectors
@@ -260,30 +267,30 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
                 0x00000166       0x22 CC1150_Response.o
                 0x00000166                disable_pcint
  .text.__vector_9
-                0x00000188       0xea CC1150_Response.o
+                0x00000188       0xf4 CC1150_Response.o
                 0x00000188                __vector_9
  .text.send_command
-                0x00000272       0x10 CC1150_Response.o
-                0x00000272                send_command
+                0x0000027c       0x10 CC1150_Response.o
+                0x0000027c                send_command
  .text.send_command_sres
-                0x00000282       0x16 CC1150_Response.o
-                0x00000282                send_command_sres
+                0x0000028c       0x16 CC1150_Response.o
+                0x0000028c                send_command_sres
  .text.set_register
-                0x00000298       0x1a CC1150_Response.o
-                0x00000298                set_register
+                0x000002a2       0x1a CC1150_Response.o
+                0x000002a2                set_register
  .text.set_register_burst
-                0x000002b2       0x2a CC1150_Response.o
-                0x000002b2                set_register_burst
+                0x000002bc       0x2a CC1150_Response.o
+                0x000002bc                set_register_burst
  .text.write_settings
-                0x000002dc       0xec CC1150_Response.o
-                0x000002dc                write_settings
- .text.main     0x000003c8       0xf8 CC1150_Response.o
-                0x000003c8                main
-                0x000004c0                . = ALIGN (0x2)
+                0x000002e6       0xec CC1150_Response.o
+                0x000002e6                write_settings
+ .text.main     0x000003d2       0x90 CC1150_Response.o
+                0x000003d2                main
+                0x00000462                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000004c0        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
-                0x000004c0                exit
-                0x000004c0                _exit
+ .fini9         0x00000462        0x0 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+                0x00000462                exit
+                0x00000462                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -302,46 +309,47 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000004c0        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
+ .fini0         0x00000462        0x4 c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x000004c4                _etext = .
+                0x00000466                _etext = .
 
-.data           0x00800200       0x3a load address 0x000004c4
+.data           0x00800200       0x2a load address 0x00000466
                 0x00800200                PROVIDE (__data_start, .)
  *(.data)
- .data          0x00800200       0x39 CC1150_Response.o
-                0x00800237                clear_to_send
-                0x00800224                signature
+ .data          0x00800200       0x2a CC1150_Response.o
                 0x0080021c                paTable
+                0x00800224                tx_buf
                 0x00800200                regSettings
  *(.data*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x0080023a                . = ALIGN (0x2)
- *fill*         0x00800239        0x1 00
-                0x0080023a                _edata = .
-                0x0080023a                PROVIDE (__data_end, .)
+                0x0080022a                . = ALIGN (0x2)
+                0x0080022a                _edata = .
+                0x0080022a                PROVIDE (__data_end, .)
 
-.bss            0x0080023a       0x2b
-                0x0080023a                PROVIDE (__bss_start, .)
+.bss            0x0080022a        0x6
+                0x0080022a                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x0080023a        0x1 CC1150_Response.o
  *(.bss*)
  *(COMMON)
- COMMON         0x0080023b       0x2a CC1150_Response.o
-                0x0080023b                tx_buffer_data
-                0x0080025b                tx_buffer
-                0x00800265                PROVIDE (__bss_end, .)
-                0x000004c4                __data_load_start = LOADADDR (.data)
-                0x000004fe                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x0080022a        0x6 CC1150_Response.o
+                0x0080022a                tx_sample
+                0x0080022b                tx_byte
+                0x0080022c                tx_header
+                0x0080022d                tx_active
+                0x0080022e                tx_len
+                0x0080022f                tx_bit
+                0x00800230                PROVIDE (__bss_end, .)
+                0x00000466                __data_load_start = LOADADDR (.data)
+                0x00000490                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800265        0x0
-                0x00800265                PROVIDE (__noinit_start, .)
+.noinit         0x00800230        0x0
+                0x00800230                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800265                PROVIDE (__noinit_end, .)
-                0x00800265                _end = .
-                0x00800265                PROVIDE (__heap_start, .)
+                0x00800230                PROVIDE (__noinit_end, .)
+                0x00800230                _end = .
+                0x00800230                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -392,50 +400,50 @@ LOAD c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x68
+.debug_aranges  0x00000000       0x70
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x68 CC1150_Response.o
+                0x00000000       0x70 CC1150_Response.o
 
 .debug_pubnames
-                0x00000000      0x11a
+                0x00000000      0x13d
  *(.debug_pubnames)
  .debug_pubnames
-                0x00000000      0x11a CC1150_Response.o
+                0x00000000      0x13d CC1150_Response.o
 
-.debug_info     0x00000000      0x916
+.debug_info     0x00000000      0x67b
  *(.debug_info)
- .debug_info    0x00000000      0x916 CC1150_Response.o
+ .debug_info    0x00000000      0x67b CC1150_Response.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x271
+.debug_abbrev   0x00000000      0x21f
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x271 CC1150_Response.o
+ .debug_abbrev  0x00000000      0x21f CC1150_Response.o
 
-.debug_line     0x00000000      0x675
+.debug_line     0x00000000      0x5f4
  *(.debug_line)
- .debug_line    0x00000000      0x675 CC1150_Response.o
+ .debug_line    0x00000000      0x5f4 CC1150_Response.o
 
-.debug_frame    0x00000000       0xb0
+.debug_frame    0x00000000       0xc0
  *(.debug_frame)
- .debug_frame   0x00000000       0xb0 CC1150_Response.o
+ .debug_frame   0x00000000       0xc0 CC1150_Response.o
 
-.debug_str      0x00000000      0x336
+.debug_str      0x00000000      0x2ac
  *(.debug_str)
- .debug_str     0x00000000      0x336 CC1150_Response.o
-                                0x38b (size before relaxing)
+ .debug_str     0x00000000      0x2ac CC1150_Response.o
+                                0x2f4 (size before relaxing)
 
-.debug_loc      0x00000000      0x1a4
+.debug_loc      0x00000000      0x114
  *(.debug_loc)
- .debug_loc     0x00000000      0x1a4 CC1150_Response.o
+ .debug_loc     0x00000000      0x114 CC1150_Response.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(CC1150_Response.elf elf32-avr)
 LOAD linker stubs
 
-.debug_ranges   0x00000000       0xa8
- .debug_ranges  0x00000000       0xa8 CC1150_Response.o
+.debug_ranges   0x00000000       0xe0
+ .debug_ranges  0x00000000       0xe0 CC1150_Response.o
 
 Cross Reference Table
 
@@ -513,7 +521,6 @@ __vector_9                                        CC1150_Response.o
 __vector_default                                  c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
 __vectors                                         c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/../../../../avr/lib/avr51/crtm1280.o
 _exit                                             c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
-clear_to_send                                     CC1150_Response.o
 disable_pcint                                     CC1150_Response.o
 enable_pcint                                      CC1150_Response.o
 exit                                              c:/winavr-20100110/bin/../lib/gcc/avr/4.3.3/avr51\libgcc.a(_exit.o)
@@ -527,7 +534,12 @@ send_command_sres                                 CC1150_Response.o
 set_register                                      CC1150_Response.o
 set_register_burst                                CC1150_Response.o
 setup_spi                                         CC1150_Response.o
-signature                                         CC1150_Response.o
-tx_buffer                                         CC1150_Response.o
-tx_buffer_data                                    CC1150_Response.o
+start_tx                                          CC1150_Response.o
+tx_active                                         CC1150_Response.o
+tx_bit                                            CC1150_Response.o
+tx_buf                                            CC1150_Response.o
+tx_byte                                           CC1150_Response.o
+tx_header                                         CC1150_Response.o
+tx_len                                            CC1150_Response.o
+tx_sample                                         CC1150_Response.o
 write_settings                                    CC1150_Response.o

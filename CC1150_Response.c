@@ -2,7 +2,6 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <CC1150.h>
-#include <RingBuffer.h>
 
 // Pins used by the CC1150 board
 #define SPI_SS_PIN PORTB0
@@ -55,55 +54,23 @@ uint8_t paTable[] = {
 	0xC3
 };
 
-// This holds the raw signal clocked out
-// From logic trace and Python parser
-/*uint8_t signature[] = {
-	0xe2,
-	0x4d,
-	0xa4,
-	0x9b,
-	0x69,
-	0xb6,
-	0xda, 
-	0x6d, 
-	0x24, 
-	0x92, 
-	0x69, 
-	0x24, 
-	0x92, 
-	0x49, 
-	0x24, 
-	0x92, 
-	0x49, 
-	0xa4
-};
-*/
-uint8_t signature[] = {
- 0xe2,
- 0x4d,
- 0xa4,
- 0x93,
- 0x69,
- 0xa4,
- 0x92,
- 0x49,
- 0xa4,
- 0x92,
- 0x69,
- 0xa4,
- 0x92,
- 0x49,
- 0x24,
- 0x92,
- 0x49,
- 0xa4,
- 0x9b
+uint8_t tx_buf[] = {
+0b00110000,
+0b11010000,
+0b00010000,
+0b01010000,
+0b00000000,
+0b00010001
 };
 
-volatile uint8_t clear_to_send = 1;
-RingBuffer_t tx_buffer;
-uint8_t tx_buffer_data[32];
-	
+uint8_t tx_len; // length of tx_buf to be sent
+uint8_t tx_byte; // index of byte
+uint8_t tx_bit; // index of bit
+uint8_t tx_sample; // which bit of encoded value is being sent
+uint8_t tx_header; // header bits
+volatile uint8_t tx_active; // flag to indicate if transmit is active
+
+
 void setup_spi(uint8_t clock) {
 	
 	// configure the DDR for the pins.
@@ -148,45 +115,83 @@ void disable_pcint(void) {
 	cli();
 }
 
+void start_tx() {
+	tx_len = 6; // length of tx_buf to be sent
+	tx_byte = 0;
+	tx_bit = 0;
+	tx_header = 1;
+	tx_active = 1; // flag to indicate if transmit is active
+}
+
 // Interrupt handler for pin change interrupt.
-// This clocks the ring buffer out on the L0 pin
+// This clocks the buffer out on the L0 pin
 // in responses to changes B3
 ISR(PCINT0_vect) {
-	static uint8_t bit = 0x80; // Which bit are we clocking out
-	static uint8_t byte = 0; // Current byte we are clocking out
-	
+		
 	// CC1150 samples on falling edge
 	// So we need to setup on rising edge
 	// MISO has the clock signal
-	if (clear_to_send == 0 && (PINB & (1 << SPI_MISO_PIN))) {
+	if (tx_active && (PINB & (1 << SPI_MISO_PIN))) {
 		
-		// We are starting a new byte
-		if (bit == 0x80 && !RingBuffer_IsEmpty(&tx_buffer)) {
-			byte = RingBuffer_Remove(&tx_buffer);
-		}
-		
-		if (byte & bit) {
-			PORTL |= (1 << GDO0);
-		} else {
-			PORTL &= ~(1 << GDO0);
-		}
-		
-		bit >>= 1;
-		
-		// We have reached the end of the byte
-		if (bit == 0x00) {
-			bit = 0x80;
-		}
-		
-		if (RingBuffer_IsEmpty(&tx_buffer)) {
-			if (bit == 0x02) {
-				clear_to_send = 1;
-				bit = 0x80;
+		if (tx_header) {
+			// We first need to transmit 111000
+			if (tx_sample < 3) {
+				PORTL |= (1 << GDO0);
+			} else {
+				PORTL &= ~(1 << GDO0);
 			}
+			
+			tx_sample++;
+			
+			if (tx_sample >= 6) {
+				tx_header = 0;
+				tx_sample = 0;
+			}
+		} else {
+			// Now we are on to the data in the packet	
+			switch (tx_sample++) {
+				case 0:
+					// First bit is always 1
+					PORTL |= (1 << GDO0);
+					break;
+				case 1:
+					// Second bit depends on the value
+					if (tx_buf[tx_byte] & tx_bit) {
+						PORTL |= (1 << GDO0);
+					} else {
+						PORTL &= ~(1 << GDO0);
+					}
+					break;
+				case 2:
+					// Third bit is always 0
+					PORTL &= ~(1 << GDO0);
+					
+					// We've reached the end of a symbol
+					// Reset the sample counter
+					tx_sample = 0;
+					
+					tx_bit >>= 1;
+					
+					if (!tx_bit) {
+						// We've reached the end of a byte
+						// Move on to the next one
+						tx_bit = 0x80;
+						tx_byte++;
+						
+						if (tx_byte >= tx_len) {
+							// We've reached the end of the packet
+							// Stop the tranmission
+							tx_active = 0;
+							tx_byte = 0;
+							tx_header = 1;
+						}
+					} 
+					
+					break;
+			}
+							
 		}
 	}
-	
-	
 }
 
 // SPI helper functions
@@ -289,7 +294,8 @@ int main(void) {
 	setup_spi(SPI_MSTR_CLK4);
 	enable_spi();
 	
-	RingBuffer_InitBuffer(&tx_buffer, tx_buffer_data, sizeof(tx_buffer_data));
+	DDRL |= (1 << PORTL1);
+	DDRL |= (1 << PORTL2);
 
 	// Reset and then set registers and PA table
 	send_command_sres();
@@ -297,22 +303,21 @@ int main(void) {
 	// PATABLE is at 0x3E for read, and 0x7E for write.
 	set_register_burst(CC1150_PATABLE + 0x40, paTable, sizeof(paTable));
 
-	// Send door signal 50 times
+	
 	while(1) {
 		send_command(CC1150_STX);
 		
 		enable_pcint();
 		
-		for (int j = 0; j < 50; j++) {
-			for (int i = 0; i < sizeof(signature); i++) {
-				RingBuffer_Insert(&tx_buffer, signature[i]);
-			}
+		// Send door signal 50 times
+		for (int i = 0; i < 50; i++) {
 			
 			// Allow interrupt handler to send data
-			clear_to_send = 0;
+			start_tx();
 			
-			// Churn until interrupt handler is done
-			while(clear_to_send == 0);
+			// Churn until interrupt handler runs
+			while(tx_active);
+
 		}
 	
 		disable_pcint();
